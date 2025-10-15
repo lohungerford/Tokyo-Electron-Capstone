@@ -63,3 +63,4 @@ Documentation/   # Design docs, guides, SOP mappings
 * **Unity 2022.3 LTS** (or newer)
 * **Visual Studio** or **JetBrains Rider** (C# support)
 * **Git**
+* **VScode**
