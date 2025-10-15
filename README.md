@@ -8,11 +8,16 @@
 <div align="center">
 
 **Platforms:** Web · Windows · macOS · iOS · Android
+
 **Engine:** Unity **2022.3 LTS**
+
 **AI/ML:** Unity **ML‑Agents** · **Barracuda**
+
 **Code:** C# (game) · Python (training)
 
 </div>
+
+
 
 ---
 
