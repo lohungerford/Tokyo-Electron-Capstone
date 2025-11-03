@@ -8,16 +8,10 @@
 <div align="center">
 
 **Platforms:** Web · Windows · macOS · iOS · Android
-
 **Engine:** Unity **2022.3 LTS**
-
-**AI/ML:** Unity **ML‑Agents** · **Barracuda**
-
-**Code:** C# (game) · Python (training)
-
+**AI/ML:** Unity ML-ToolKit **ML‑Agents** · **Barracuda**
+**Code:** C# (game) 
 </div>
-
-
 
 ---
 
@@ -46,11 +40,10 @@
 
 ```
 Assets/
-  Scenes/        # Game levels
+  Scenes/        # Game levels, global materials
   Scripts/       # Gameplay, systems, services
-  ML-Models/     # Trained neural nets (ONNX/NN)
+  ML-Models/     # Trained neural nets (UnityXR-Toolkit) 
   UI/            # Menus, HUD, prefabs
-Python/          # Training scripts (ML-Agents)
 Documentation/   # Design docs, guides, SOP mappings
 ```
 
