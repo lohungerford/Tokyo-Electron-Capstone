@@ -6,8 +6,10 @@ public class KillZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //to be at the top of the object hierarchy
+        Transform root = other.transform.root;
         //should only respond to the player object
-        if (!other.CompareTag("PlayeR")) return;
+        if (!root.CompareTag("Player")) return;
 
         //if the player has a character controller, disable that before moving
         CharacterController cc = other.GetComponent<CharacterController>();
