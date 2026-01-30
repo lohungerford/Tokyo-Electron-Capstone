@@ -65,6 +65,12 @@
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj",
+<<<<<<< Updated upstream
     },
     "dotnet.defaultSolution": "Tokyo-Electron-Capstone.sln"
+=======
+        "*.slnx": "*.csproj"
+    },
+    "dotnet.defaultSolution": "My project (1).slnx"
+>>>>>>> Stashed changes
 }
