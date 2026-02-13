@@ -3,80 +3,90 @@ using UnityEngine.AI;
 
 public class FriendlyAIScript : MonoBehaviour
 {
-    [Header("Follow Settings")]
-    public float followDistance = 1.5f;   // how close the robot gets
-    public float stopDistance = 1.2f;     // when it fully stops
-    public float followSpeed = 1.2f;      // slow, friendly pace
-    public float rotationSpeed = 4f;
+    
+    public Transform[] patrolPoints;
+    public float patrolSpeed = 1.2f;
+    public float stoppingDistance = 0.4f;
+    public float idleTimeAtPoint = 1.5f;
 
-    [Header("Player Target")]
-    public Transform playerOverride;      // VR camera or fallback
-    private Transform playerHead;
+    
+    public float stuckTimeout = 3f; // seconds before forcing a new destination
 
     private NavMeshAgent agent;
+    private int currentIndex;
+    private float idleTimer;
+    private float stuckTimer;
+    private Vector3 lastPosition;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = followSpeed;
-        agent.stoppingDistance = stopDistance;
-        agent.updateRotation = false; // we rotate manually
+        agent.speed = patrolSpeed;
+        agent.stoppingDistance = stoppingDistance;
+        agent.updateRotation = true;
 
-        if (playerOverride != null)
-            playerHead = playerOverride;
-        else
-            playerHead = Camera.main.transform;
+        if (patrolPoints.Length > 0)
+            GoToNextPoint();
     }
 
     void Update()
     {
-        FollowPlayer();
-        RotateTowardPlayer();
+        HandlePatrol();
+        DetectIfStuck();
     }
 
     // ---------------------------------------------
-    // FOLLOW LOGIC
+    // PATROL LOGIC
     // ---------------------------------------------
 
-    void FollowPlayer()
+    void HandlePatrol()
     {
-        float dist = HorizontalDistanceToPlayer();
+        if (agent.pathPending) return;
 
-        if (dist > followDistance)
+        // Arrived at destination
+        if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            agent.isStopped = false;
-            agent.SetDestination(playerHead.position);
+            idleTimer += Time.deltaTime;
+
+            if (idleTimer >= idleTimeAtPoint)
+            {
+                GoToNextPoint();
+                idleTimer = 0f;
+            }
+        }
+    }
+
+    void GoToNextPoint()
+    {
+        if (patrolPoints.Length == 0) return;
+
+        currentIndex = Random.Range(0, patrolPoints.Length);
+        agent.SetDestination(patrolPoints[currentIndex].position);
+        stuckTimer = 0f;
+    }
+
+    // ---------------------------------------------
+    // STUCK PREVENTION
+    // ---------------------------------------------
+
+    void DetectIfStuck()
+    {
+        float movedDistance = Vector3.Distance(transform.position, lastPosition);
+
+        if (movedDistance < 0.01f && agent.hasPath)
+        {
+            stuckTimer += Time.deltaTime;
+
+            if (stuckTimer >= stuckTimeout)
+            {
+                GoToNextPoint(); // force new target
+            }
         }
         else
         {
-            agent.isStopped = true;
+            stuckTimer = 0f;
         }
-    }
 
-    // ---------------------------------------------
-    // HELPERS
-    // ---------------------------------------------
-
-    float HorizontalDistanceToPlayer()
-    {
-        Vector3 flatRobot = new Vector3(transform.position.x, 0, transform.position.z);
-        Vector3 flatPlayer = new Vector3(playerHead.position.x, 0, playerHead.position.z);
-        return Vector3.Distance(flatRobot, flatPlayer);
-    }
-
-    void RotateTowardPlayer()
-    {
-        Vector3 direction = playerHead.position - transform.position;
-        direction.y = 0;
-
-        if (direction.sqrMagnitude > 0.01f)
-        {
-            Quaternion targetRot = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Lerp(
-                transform.rotation,
-                targetRot,
-                Time.deltaTime * rotationSpeed
-            );
-        }
+        lastPosition = transform.position;
     }
 }
