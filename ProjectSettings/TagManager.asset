@@ -5,6 +5,17 @@ TagManager:
   serializedVersion: 3
   tags:
   - SamplesInfoPanel
+  - QDSUIIcon
+  - QDSUIToggleBorderlessButton
+  - QDSUITextSecondaryColor
+  - QDSUIBackplateGradient
+  - QDSUITooltip
+  - QDSUIToggleButton
+  - QDSUIBorderlessButton
+  - QDSUISharedThemeColor
+  - QDSUISection
+  - QDSUISecondaryButton
+  - QDSUIAccentColor
   layers:
   - Default
   - TransparentFX
@@ -13,7 +24,7 @@ TagManager:
   - Water
   - UI
   - Overlay UI
-  - 
+  - Barrier
   - 
   - 
   - 
