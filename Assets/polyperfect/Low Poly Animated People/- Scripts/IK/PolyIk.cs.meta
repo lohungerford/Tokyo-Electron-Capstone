@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: e45857479bad2cb46a009e9afc88f021
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 156748
+  packageName: Low Poly Animated People
+  packageVersion: 3.02
+  assetPath: Assets/polyperfect/Low Poly Animated People/- Scripts/IK/PolyIk.cs
+  uploadId: 827248

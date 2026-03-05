@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c785f97ed3e80994e93818b6318532dd
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 156748
+  packageName: Low Poly Animated People
+  packageVersion: 3.02
+  assetPath: Assets/polyperfect/Low Poly Animated People/- Scripts/PolyMorpher.cs
+  uploadId: 827248

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 9561b8afcd5cc3849bef4a2814e1e14d
+timeCreated: 1582312879
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 156748
+  packageName: Low Poly Animated People
+  packageVersion: 3.02
+  assetPath: Assets/polyperfect/Low Poly Animated People/- Scripts/MakeCharacters.cs
+  uploadId: 827248

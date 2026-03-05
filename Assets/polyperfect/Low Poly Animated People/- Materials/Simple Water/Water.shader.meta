@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 57234bd74982eef4390ee71ab91f493b
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 156748
+  packageName: Low Poly Animated People
+  packageVersion: 3.02
+  assetPath: Assets/polyperfect/Low Poly Animated People/- Materials/Simple Water/Water.shader
+  uploadId: 827248

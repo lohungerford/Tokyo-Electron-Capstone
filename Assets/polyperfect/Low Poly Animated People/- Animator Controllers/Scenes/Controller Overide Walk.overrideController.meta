@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 9c64a7090e18f004c8e7f8bd2a236ede
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 22100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 156748
+  packageName: Low Poly Animated People
+  packageVersion: 3.02
+  assetPath: Assets/polyperfect/Low Poly Animated People/- Animator Controllers/Scenes/Controller
+    Overide Walk.overrideController
+  uploadId: 827248
