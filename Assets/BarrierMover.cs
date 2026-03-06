@@ -3,24 +3,36 @@ using UnityEngine;
 public class BarrierMover : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Transform followOrigin;   // CenterEyeAnchor
-    [SerializeField] private LayerMask barrierMask;    // Barrier layer only
+    [SerializeField] private Transform followOrigin;
+    [SerializeField] private LayerMask barrierMask;
 
     [Header("Grab settings")]
-    [SerializeField] private float grabRange = 1.5f;
-    [SerializeField] private float holdDistance = 1.0f;
-    [SerializeField] private float holdHeightOffset = -0.3f; // tweak so it sits lower than eye level
-    [SerializeField] private KeyCode testKey = KeyCode.X;    // TEMP for keyboard testing
+    [SerializeField] private float grabRange = 2f;
+    [SerializeField] private float holdDistance = 2f;
+    [SerializeField] private float holdHeightOffset = -0.3f;
+
+    [Header("Drop settings")]
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private float groundSnapRayDistance = 10f;
 
     private BarrierInteractable held;
+    private float heldYaw;
 
     void Update()
     {
-        if (OVRInput.GetDown(OVRInput.Button.Three)) // A on right controller
+        // X on left controller: grab or drop
+        if (OVRInput.GetDown(OVRInput.Button.Three))
         {
-            Debug.Log("X pressed");
-            if (held == null) TryGrabNearest();
-            else Drop();
+            if (held == null)
+                TryGrabNearest();
+            else
+                Drop();
+        }
+
+        // Y on left controller: rotate held barrier by 90 degrees
+        if (held != null && OVRInput.GetDown(OVRInput.Button.Four))
+        {
+            heldYaw += 90f;
         }
 
         if (held != null)
@@ -29,12 +41,19 @@ public class BarrierMover : MonoBehaviour
 
     private void TryGrabNearest()
     {
-        // Find nearest barrier via overlap sphere
-        Collider[] hits = Physics.OverlapSphere(followOrigin.position, grabRange, barrierMask, QueryTriggerInteraction.Ignore);
+        Collider[] hits = Physics.OverlapSphere(
+            followOrigin.position,
+            grabRange,
+            barrierMask,
+            QueryTriggerInteraction.Ignore
+        );
 
-        if (hits.Length == 0) return;
+        if (hits.Length == 0)
+        {
+            Debug.Log("No barrier found in grab range.");
+            return;
+        }
 
-        // pick closest
         Collider best = hits[0];
         float bestDist = Vector3.Distance(followOrigin.position, best.transform.position);
 
@@ -49,10 +68,16 @@ public class BarrierMover : MonoBehaviour
         }
 
         held = best.GetComponentInParent<BarrierInteractable>();
-        if (held == null) return;
+        if (held == null)
+        {
+            Debug.Log("Nearest object did not have BarrierInteractable.");
+            return;
+        }
 
-        // Make it "stick" by disabling physics while held
         held.rb.isKinematic = true;
+        heldYaw = held.transform.eulerAngles.y;
+
+        Debug.Log("Picked up barrier: " + held.name);
     }
 
     private void Follow()
@@ -60,9 +85,7 @@ public class BarrierMover : MonoBehaviour
         Vector3 targetPos = followOrigin.position + followOrigin.forward * holdDistance;
         targetPos.y += holdHeightOffset;
 
-        // Keep upright, face same yaw as player
-        Quaternion targetRot = Quaternion.Euler(0f, followOrigin.eulerAngles.y, 0f);
-
+        Quaternion targetRot = Quaternion.Euler(0f, heldYaw, 0f);
         held.transform.SetPositionAndRotation(targetPos, targetRot);
     }
 
@@ -70,15 +93,39 @@ public class BarrierMover : MonoBehaviour
     {
         if (held == null) return;
 
+        Vector3 dropPos = held.transform.position;
+
+        Ray ray = new Ray(dropPos + Vector3.up * 2f, Vector3.down);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, groundSnapRayDistance, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            Debug.Log("Hit ground: " + hit.collider.name);
+
+            Collider barrierCollider = held.GetComponent<Collider>();
+            float halfHeight = 0.5f;
+
+            if (barrierCollider != null)
+                halfHeight = barrierCollider.bounds.extents.y;
+
+            dropPos.y = hit.point.y + halfHeight;
+        }
+        else
+        {
+            Debug.Log("Did not hit ground.");
+        }
+
+        held.transform.SetPositionAndRotation(dropPos, Quaternion.Euler(0f, heldYaw, 0f));
         held.rb.isKinematic = false;
-        // keep gravity off for now; you can enable later if you want it to fall when dropped
+
+        Debug.Log("Dropped barrier at: " + dropPos);
+
         held = null;
     }
 
-    // Optional: visualize grab radius in Scene view
     private void OnDrawGizmosSelected()
     {
         if (!followOrigin) return;
+
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(followOrigin.position, grabRange);
     }

@@ -16,6 +16,18 @@ TagManager:
   - QDSUISection
   - QDSUISecondaryButton
   - QDSUIAccentColor
+  - QDSUIPrimaryButton
+  - QDSUITextSecondaryInvertedColor
+  - QDSUITextInvertedColor
+  - QDSUIDestructiveButton
+  - QDSUIToggleSwitch
+  - PassThroughButton
+  - PassThrough
+  - Locomotion
+  - LocoButton
+  - LocoText
+  - QDSUITextInputField
+  - QDSUIToggleCheckboxRadio
   layers:
   - Default
   - TransparentFX
@@ -25,7 +37,7 @@ TagManager:
   - UI
   - Overlay UI
   - Barrier
-  - 
+  - Floor
   - 
   - 
   - 
