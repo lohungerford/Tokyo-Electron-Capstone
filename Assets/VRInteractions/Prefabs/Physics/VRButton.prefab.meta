@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1dc896f94592ffd48822010f3fb3eebb
+timeCreated: 1467387612
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Prefabs/Physics/VRButton.prefab
+  uploadId: 127830

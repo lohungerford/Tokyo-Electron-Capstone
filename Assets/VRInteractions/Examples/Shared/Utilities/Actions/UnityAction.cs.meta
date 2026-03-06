@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: eeec9992dd3bc794a8bf75fbd61c5b7c
+timeCreated: 1467367932
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Examples/Shared/Utilities/Actions/UnityAction.cs
+  uploadId: 127830

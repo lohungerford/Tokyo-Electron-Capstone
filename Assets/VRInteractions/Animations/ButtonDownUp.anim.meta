@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1c0601588271a894fac8a0ad7c2064a0
+timeCreated: 1467628527
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Animations/ButtonDownUp.anim
+  uploadId: 127830

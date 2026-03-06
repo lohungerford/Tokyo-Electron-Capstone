@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 3
   tags:
   - SamplesInfoPanel
+  - floor
+  - LeftController
+  - RightController
+  - Mug
+  - Flashlight
   layers:
   - Default
   - TransparentFX

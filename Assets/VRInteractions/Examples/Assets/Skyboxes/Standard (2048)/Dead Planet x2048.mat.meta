@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a7863f20c48a13c4786c70f461b6ea54
+timeCreated: 1437412314
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Examples/Assets/Skyboxes/Standard (2048)/Dead
+    Planet x2048.mat
+  uploadId: 127830

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: f0bbbd0de510bb8419eef2f3f943e7e5
+timeCreated: 1467889427
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Scripts/VRInteractable.cs
+  uploadId: 127830

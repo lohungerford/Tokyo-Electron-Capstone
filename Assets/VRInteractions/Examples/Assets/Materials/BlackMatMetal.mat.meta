@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d3cc8ee58574d8b4da30c787f34b803c
+timeCreated: 1466777849
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Examples/Assets/Materials/BlackMatMetal.mat
+  uploadId: 127830

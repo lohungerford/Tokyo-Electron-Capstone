@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d7707a53079e23c429c81423ee49f370
+timeCreated: 1467646433
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Prefabs/Gripped/VRButtonGripped.prefab
+  uploadId: 127830

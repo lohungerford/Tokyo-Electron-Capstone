@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c8b99aa1c1ba566489744bd91a4312af
+timeCreated: 1467733915
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Examples/ExampleActivityScene.unity
+  uploadId: 127830

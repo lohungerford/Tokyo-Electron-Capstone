@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3c50166335f4f054390374c5b880f104
+timeCreated: 1466606286
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Examples/Assets/Materials/02 - Default.mat
+  uploadId: 127830

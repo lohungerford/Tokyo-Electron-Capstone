@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e9b0ca875d4879b409d76235135784e0
+timeCreated: 1467649452
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Examples/Assets/Light.prefab
+  uploadId: 127830

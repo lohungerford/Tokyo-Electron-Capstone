@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 18d80c5f4fc00b64583196cb859d51f5
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 236631
+  packageName: Stylized flashlight
+  packageVersion: 1.0
+  assetPath: Assets/Stylized flashlight/Materials/flashLight_LP_DefaultMaterial_BaseColor.mat
+  uploadId: 536113

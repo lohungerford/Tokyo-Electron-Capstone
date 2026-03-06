@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c36e0d71bc78a5d4cab18f994e7e851a
+timeCreated: 1467285140
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Examples/Assets/Materials/BlueAmbient.mat
+  uploadId: 127830

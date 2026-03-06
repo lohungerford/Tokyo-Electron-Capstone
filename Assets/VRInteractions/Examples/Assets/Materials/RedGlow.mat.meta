@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d9d9e2c8fc512a745a9428a5e72ca1cb
+timeCreated: 1467649506
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66520
+  packageName: VR Buttons and Levers
+  packageVersion: 0.5
+  assetPath: Assets/VRInteractions/Examples/Assets/Materials/RedGlow.mat
+  uploadId: 127830
