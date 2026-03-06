@@ -14815,7 +14815,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   grabRange: 2
-  holdDistance: 3
+  holdDistance: 2
   holdHeightOffset: -0.3
   groundMask:
     serializedVersion: 2

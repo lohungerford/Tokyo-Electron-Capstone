@@ -4,10 +4,13 @@ public class BarrierMover : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform followOrigin;
-    [SerializeField] private LayerMask barrierMask;
+    [SerializeField] private GameObject barrierPrefab;
 
     [Header("Grab settings")]
+    [SerializeField] private LayerMask barrierMask;
     [SerializeField] private float grabRange = 2f;
+
+    [Header("Hold settings")]
     [SerializeField] private float holdDistance = 2f;
     [SerializeField] private float holdHeightOffset = -0.3f;
 
@@ -20,16 +23,21 @@ public class BarrierMover : MonoBehaviour
 
     void Update()
     {
-        // X on left controller: grab or drop
+        // X button
         if (OVRInput.GetDown(OVRInput.Button.Three))
         {
             if (held == null)
-                TryGrabNearest();
+            {
+                if (!TryGrabNearest())
+                    SpawnBarrier();
+            }
             else
+            {
                 Drop();
+            }
         }
 
-        // Y on left controller: rotate held barrier by 90 degrees
+        // Y button rotates
         if (held != null && OVRInput.GetDown(OVRInput.Button.Four))
         {
             heldYaw += 90f;
@@ -39,7 +47,7 @@ public class BarrierMover : MonoBehaviour
             Follow();
     }
 
-    private void TryGrabNearest()
+    private bool TryGrabNearest()
     {
         Collider[] hits = Physics.OverlapSphere(
             followOrigin.position,
@@ -49,10 +57,7 @@ public class BarrierMover : MonoBehaviour
         );
 
         if (hits.Length == 0)
-        {
-            Debug.Log("No barrier found in grab range.");
-            return;
-        }
+            return false;
 
         Collider best = hits[0];
         float bestDist = Vector3.Distance(followOrigin.position, best.transform.position);
@@ -68,16 +73,28 @@ public class BarrierMover : MonoBehaviour
         }
 
         held = best.GetComponentInParent<BarrierInteractable>();
+
         if (held == null)
-        {
-            Debug.Log("Nearest object did not have BarrierInteractable.");
-            return;
-        }
+            return false;
 
         held.rb.isKinematic = true;
         heldYaw = held.transform.eulerAngles.y;
 
-        Debug.Log("Picked up barrier: " + held.name);
+        return true;
+    }
+
+    private void SpawnBarrier()
+    {
+        Vector3 spawnPos = followOrigin.position + followOrigin.forward * holdDistance;
+        spawnPos.y += holdHeightOffset;
+
+        Quaternion spawnRot = Quaternion.Euler(0f, followOrigin.eulerAngles.y, 0f);
+
+        GameObject newBarrier = Instantiate(barrierPrefab, spawnPos, spawnRot);
+
+        held = newBarrier.GetComponent<BarrierInteractable>();
+        held.rb.isKinematic = true;
+        heldYaw = newBarrier.transform.eulerAngles.y;
     }
 
     private void Follow()
@@ -91,16 +108,12 @@ public class BarrierMover : MonoBehaviour
 
     private void Drop()
     {
-        if (held == null) return;
-
         Vector3 dropPos = held.transform.position;
 
         Ray ray = new Ray(dropPos + Vector3.up * 2f, Vector3.down);
 
         if (Physics.Raycast(ray, out RaycastHit hit, groundSnapRayDistance, groundMask, QueryTriggerInteraction.Ignore))
         {
-            Debug.Log("Hit ground: " + hit.collider.name);
-
             Collider barrierCollider = held.GetComponent<Collider>();
             float halfHeight = 0.5f;
 
@@ -109,24 +122,10 @@ public class BarrierMover : MonoBehaviour
 
             dropPos.y = hit.point.y + halfHeight;
         }
-        else
-        {
-            Debug.Log("Did not hit ground.");
-        }
 
         held.transform.SetPositionAndRotation(dropPos, Quaternion.Euler(0f, heldYaw, 0f));
         held.rb.isKinematic = false;
 
-        Debug.Log("Dropped barrier at: " + dropPos);
-
         held = null;
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (!followOrigin) return;
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(followOrigin.position, grabRange);
     }
 }
