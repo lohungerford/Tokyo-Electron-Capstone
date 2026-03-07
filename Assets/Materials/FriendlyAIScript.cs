@@ -3,14 +3,28 @@ using UnityEngine.AI;
 
 public class FriendlyAIScript : MonoBehaviour
 {
-    
     public Transform[] patrolPoints;
     public float patrolSpeed = 1.2f;
     public float stoppingDistance = 0.4f;
     public float idleTimeAtPoint = 1.5f;
+    public float stuckTimeout = 3f;
 
-    
-    public float stuckTimeout = 3f; // seconds before forcing a new destination
+    // ---------------------------------------------
+    // ANIMATION
+    // ---------------------------------------------
+
+    private Animator anim;
+    public EmotionChanger emotionChanger;
+    public RobotColorManager robotColorManager;
+
+    // ---------------------------------------------
+    // AUDIO
+    // ---------------------------------------------
+
+    public AudioSource audioSource;
+    public AudioClip footstepClip;
+    public float footstepInterval = 0.4f;
+    private float footstepTimer = 0f;
 
     private NavMeshAgent agent;
     private int currentIndex;
@@ -21,9 +35,19 @@ public class FriendlyAIScript : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animator>();
         agent.speed = patrolSpeed;
         agent.stoppingDistance = stoppingDistance;
         agent.updateRotation = true;
+
+        // Friendly — always happy
+        if (emotionChanger != null)
+        {
+            emotionChanger.SetEmotionEyes(1);
+            emotionChanger.SetEmotionMouth(1);
+        }
+        if (robotColorManager != null)
+            robotColorManager.ChangeBodyColor(1);
 
         if (patrolPoints.Length > 0)
             GoToNextPoint();
@@ -33,6 +57,11 @@ public class FriendlyAIScript : MonoBehaviour
     {
         HandlePatrol();
         DetectIfStuck();
+
+        if (anim != null)
+            anim.SetFloat("Speed", agent.velocity.magnitude);
+
+        HandleFootsteps();
     }
 
     // ---------------------------------------------
@@ -88,5 +117,30 @@ public class FriendlyAIScript : MonoBehaviour
         }
 
         lastPosition = transform.position;
+    }
+
+    // ---------------------------------------------
+    // FOOTSTEPS
+    // ---------------------------------------------
+
+    void HandleFootsteps()
+    {
+        if (footstepClip == null || audioSource == null) return;
+
+        bool isMoving = agent.velocity.magnitude > 0.1f;
+
+        if (isMoving)
+        {
+            footstepTimer += Time.deltaTime;
+            if (footstepTimer >= footstepInterval)
+            {
+                footstepTimer = 0f;
+                audioSource.PlayOneShot(footstepClip);
+            }
+        }
+        else
+        {
+            footstepTimer = 0f;
+        }
     }
 }

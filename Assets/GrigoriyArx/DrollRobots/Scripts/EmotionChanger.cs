@@ -45,9 +45,9 @@ public class EmotionChanger : MonoBehaviour
         if ((objectRendererEyes != null)&& (objectRendererMouth != null))
         {
             float offsetXEyes = (float)currentEmotionEyesIndex / totalEmotions;
-            objectRendererEyes.material.SetTextureOffset("_MainTex", new Vector2(offsetXEyes, 0));
+            objectRendererEyes.material.SetTextureOffset("_BaseMap", new Vector2(offsetXEyes, 0));
             float offsetXMouth = (float)currentEmotionMouthIndex / totalEmotions;
-            objectRendererMouth.material.SetTextureOffset("_MainTex", new Vector2(offsetXMouth, 0));
+            objectRendererMouth.material.SetTextureOffset("_BaseMap", new Vector2(offsetXMouth, 0));
         }
         else
         {
