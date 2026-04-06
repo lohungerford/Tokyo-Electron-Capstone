@@ -6,8 +6,26 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/KennyScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/MainMenu.unity
+    guid: e51ed5e5ccb1a0f41875c28bd4c46ce4
+  - enabled: 1
+    path: Assets/Scenes/Tutorial1.unity
+    guid: 7bb3d949584ad7b45a198b822fe88c6f
+  - enabled: 1
+    path: Assets/Scenes/Tutorial2.unity
+    guid: 6c5546c0fe9eb1641852427c58cb147a
+  - enabled: 1
+    path: Assets/Scenes/PPEMinigame.unity
+    guid: c6f40f87489814a40ad83c5b7ed909ed
+  - enabled: 1
+    path: Assets/Scenes/LevelOne.unity
+    guid: 1d2b5f3b62fd78b4f8e31a98470c15bd
+  - enabled: 1
+    path: Assets/Scenes/LevelTwo.unity
+    guid: d40cdf34024fae149a7e744b2aa7140b
+  - enabled: 1
+    path: Assets/Scenes/LevelThree.unity
+    guid: 12bade4cefa756748a45821e93076fd4
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 7619ba66d001e6b4fae4a05dab600b6d, type: 2}

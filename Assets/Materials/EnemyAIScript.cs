@@ -22,6 +22,7 @@ public class RobotAI : MonoBehaviour
     public Transform playerOverride; // optional override for VR camera
     private Transform playerHead;
     private NavMeshAgent agent;
+    private ZombieArmPose zombieArmPose;
 
     // ---------------------------------------------
     // ANIMATION
@@ -30,6 +31,9 @@ public class RobotAI : MonoBehaviour
     private Animator anim;
     public EmotionChanger emotionChanger;
     public RobotColorManager robotColorManager;
+    public int emotionIndex = 7;
+    public bool useColorManager = true;
+    public bool canRun = true;
 
     // ---------------------------------------------
     // AUDIO
@@ -63,9 +67,10 @@ public class RobotAI : MonoBehaviour
         else
             playerHead = Camera.main.transform;
 
+        zombieArmPose = GetComponent<ZombieArmPose>();
         previousState = currentState;
         OnEnterState(currentState);
-        SetEmotion(7); // Always hostile
+        SetEmotion(emotionIndex);
     }
 
     void Update()
@@ -95,7 +100,7 @@ public class RobotAI : MonoBehaviour
 
         // Drive walk/run animation from NavMesh velocity
         if (anim != null)
-            anim.SetFloat("Speed", agent.velocity.magnitude);
+            anim.SetFloat("Speed", agent.speed > 0 ? agent.velocity.magnitude / agent.speed : 0f);
 
         HandleFootsteps();
     }
@@ -113,13 +118,14 @@ public class RobotAI : MonoBehaviour
                 break;
 
             case State.Chase:
-                if (anim != null) { anim.SetFloat("run", 1f); anim.SetBool("Battle", false); }
+                if (anim != null) { anim.SetFloat("run", canRun ? 1f : 0f); anim.SetBool("Battle", false); }
                 if (audioSource != null && chaseSound != null)
                     audioSource.PlayOneShot(chaseSound);
                 break;
 
             case State.Attack:
                 if (anim != null) anim.SetBool("Battle", true);
+                if (zombieArmPose != null) zombieArmPose.enabled = false;
                 attackTimer = -0.5f; // 0.5s grace period for BattleMotions transition
                 break;
         }
@@ -134,6 +140,7 @@ public class RobotAI : MonoBehaviour
             foreach (string b in attackBools)
                 anim.SetBool(b, false);
             lastAttackBool = null;
+            if (zombieArmPose != null) zombieArmPose.enabled = true;
         }
     }
 
@@ -260,7 +267,7 @@ public class RobotAI : MonoBehaviour
             audioSource.PlayOneShot(attackSound);
     }
 
-    private string[] attackBools = { "Thumb", "Cry", "Win", "Angry" };
+    public string[] attackBools = { "Thumb", "Cry", "Win", "Angry" };
     private string lastAttackBool = null;
 
     IEnumerator PlayAttackAnimation()
@@ -285,7 +292,7 @@ public class RobotAI : MonoBehaviour
             emotionChanger.SetEmotionEyes(index);
             emotionChanger.SetEmotionMouth(index);
         }
-        if (robotColorManager != null)
+        if (useColorManager && robotColorManager != null)
             robotColorManager.ChangeBodyColor(index);
     }
 
