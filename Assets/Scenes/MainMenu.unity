@@ -1760,6 +1760,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 977289ceb2bf5ef4c85a9df73ed9c211, type: 3}
   m_PrefabInstance: {fileID: 147242598}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &147963517 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3219273534450762143, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+  m_PrefabInstance: {fileID: 1258201801}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efd927768041afd4d90e5d822283f0f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &150365703
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14925,6 +14936,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: Start_Screen_MetaXR
       objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1413715589}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Load
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Oculus.Interaction.Samples.SceneLoader, Oculus.Interaction.Samples
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: Oculus.Interaction.AudioTrigger, Oculus.Interaction.Samples
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: Tutorial1
+      objectReference: {fileID: 0}
     - target: {fileID: 4726468041916990280, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -15008,7 +15055,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3843322066815700265, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1413715590}
+    - targetCorrespondingSourceObject: {fileID: 3843322066815700265, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1413715589}
+    - targetCorrespondingSourceObject: {fileID: 3843322066815700265, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1413715591}
   m_SourcePrefab: {fileID: 100100000, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
 --- !u!1001 &1287907707
 PrefabInstance:
@@ -17567,6 +17623,93 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -6343086628222001670, guid: 977289ceb2bf5ef4c85a9df73ed9c211, type: 3}
+--- !u!1 &1413715585 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3843322066815700265, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+  m_PrefabInstance: {fileID: 1258201801}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1413715589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1413715585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c4c1b38c49ffa449b585d54fcdc4a8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1413715590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1413715585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb86ba9d4c5126e48bfef9b0c9550e9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactorFilters: []
+  _maxInteractors: -1
+  _maxSelectingInteractors: -1
+  _data: {fileID: 0}
+  _pointableElement: {fileID: 0}
+  _surface: {fileID: 147963517}
+  _selectSurface: {fileID: 0}
+  _movementProvider: {fileID: 0}
+  _tiebreakerScore: 0
+--- !u!114 &1413715591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1413715585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464721f2283eb14e94a33e812b47be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactableView: {fileID: 1413715590}
+  _whenHover:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenUnhover:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenSelect:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1413715589}
+        m_TargetAssemblyTypeName: Oculus.Interaction.Samples.SceneLoader, Oculus.Interaction.Samples
+        m_MethodName: Load
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Tutorial1
+          m_BoolArgument: 0
+        m_CallState: 2
+  _whenUnselect:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenInteractorViewAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenInteractorViewRemoved:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenSelectingInteractorViewAdded:
+    m_PersistentCalls:
+      m_Calls: []
+  _whenSelectingInteractorViewRemoved:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1414960212
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22285,6 +22428,10 @@ PrefabInstance:
       propertyPath: m_CullingMask.m_Bits
       value: 4294967231
       objectReference: {fileID: 0}
+    - target: {fileID: 1094945861008924976, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      propertyPath: _hideWhenNoInteractable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2282362920652953037, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -22331,6 +22478,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2593807021158988700, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3938980926063082332, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      propertyPath: _hideWhenNoInteractable
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

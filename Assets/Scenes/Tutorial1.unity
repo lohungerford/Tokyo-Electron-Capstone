@@ -9216,30 +9216,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 177480710507280488, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 242532647035964094, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 343506386307222115, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 750824191176251842, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1747591485173600693, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3318270401984889247, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3791950374253035540, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -28.45
@@ -9283,38 +9259,6 @@ PrefabInstance:
     - target: {fileID: 4599413728359963310, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
       propertyPath: m_Name
       value: Rob15
-      objectReference: {fileID: 0}
-    - target: {fileID: 5443765562411278200, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5584365912702725585, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6264968144761520383, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6555185102313150541, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6691807969124598007, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6747333492465705073, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7069060615619462910, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8015600027322159330, guid: 73211f86382636d4cb046ae9a0e57e1e, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
