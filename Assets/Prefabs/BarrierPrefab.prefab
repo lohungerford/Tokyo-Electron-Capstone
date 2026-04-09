@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5600408788348826743}
   - component: {fileID: 8696368258212008143}
   - component: {fileID: 771609572588794300}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: BarrierPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +114,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8148141952105769106, guid: 8bc6cfae29f06c5489546b1c88496ef1, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8817998883621220904, guid: 8bc6cfae29f06c5489546b1c88496ef1, type: 3}
       propertyPath: m_LocalScale.x
