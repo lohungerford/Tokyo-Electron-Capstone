@@ -642,6 +642,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &106341472 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1518963167555557710, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+  m_PrefabInstance: {fileID: 244207823}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &106341479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106341472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12a75cb5d6c994344a5e640a80819ab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseMenuPanel: {fileID: 0}
+  mainMenuSceneName: MainMenu
 --- !u!1 &116241987 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 977289ceb2bf5ef4c85a9df73ed9c211, type: 3}
@@ -5157,6 +5176,22 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5387565145624685759, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 106341479}
+    - target: {fileID: 5387565145624685759, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnLeavePressed
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387565145624685759, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameHUD, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387565145624685759, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5398031119008956396, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -5941,6 +5976,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5855340676982924424, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      propertyPath: m_UpdateMode
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5855340676982924430, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -6576,6 +6615,22 @@ PrefabInstance:
     - target: {fileID: 6601616154722219643, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6612361923481887672, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 106341479}
+    - target: {fileID: 6612361923481887672, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnPausePressed
+      objectReference: {fileID: 0}
+    - target: {fileID: 6612361923481887672, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GameHUD, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6612361923481887672, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6618627796019653070, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
       propertyPath: m_Layer
@@ -9184,6 +9239,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2537997867650674689, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
       insertIndex: -1
       addedObject: {fileID: 244207826}
+    - targetCorrespondingSourceObject: {fileID: 1518963167555557710, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 106341479}
   m_SourcePrefab: {fileID: 100100000, guid: 4d6e69b995afded49acc6c902e185aee, type: 3}
 --- !u!1 &244207824 stripped
 GameObject:
@@ -18080,6 +18138,8 @@ MonoBehaviour:
   friendlyRobot: {fileID: 1407328128}
   tutorialUI: {fileID: 1470887708}
   tileTarget: {fileID: 141163033}
+  holeEdge: {fileID: 1179705334}
+  holeEdgeDistance: 0.6
   stoppedDuration: 2
   stoppedVelocityThreshold: 0.05
 --- !u!1001 &1475340187
@@ -19569,7 +19629,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Tutorial1
+          m_StringArgument: MainMenu
           m_BoolArgument: 0
         m_CallState: 2
   _whenUnselect:
