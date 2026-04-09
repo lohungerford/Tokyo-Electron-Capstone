@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-
 public class DetectionZone : MonoBehaviour
 {
     private GameObject messageObject;
@@ -14,14 +13,12 @@ public class DetectionZone : MonoBehaviour
         {
             timer -= Time.deltaTime;
             timer = Mathf.Max(timer, 0f);
-
             if (messageObject != null)
             {
                 TextMeshPro tmp = messageObject.GetComponentInChildren<TextMeshPro>();
                 int seconds = Mathf.CeilToInt(timer);
-                tmp.text = "CORRECT!\n\n correct tool detected in zone\n\nTime remaining: " + seconds + "s";
+                tmp.text = "CORRECT!\n\ncorrect tool detected in zone\n\nTime remaining: " + seconds + "s";
             }
-
             if (timer <= 0f)
             {
                 timerRunning = false;
@@ -34,31 +31,52 @@ public class DetectionZone : MonoBehaviour
     {
         Debug.Log("Something entered zone: " + other.gameObject.name + " tag: " + other.gameObject.tag);
 
-        if (other.gameObject.name == "simpleGrabCupMesh" || other.gameObject.name == "simpleGrabTorchMesh" ||
-            other.transform.root.CompareTag("Mug") || other.transform.root.CompareTag("Flashlight")) 
+        string detectedName = GetDetectedItemName(other);
+        if (detectedName != null)
         {
             mugInside = true;
             timerRunning = true;
             timer = 60f;
-
-
-            ShowMessage("CORRECT Item !\n\n  detected in zone\n\nTime remaining: 60s");
-            Debug.Log("Mug detected!");
+            ShowMessage(detectedName + " detected in zone!\n\nTime remaining: 60s");
+            Debug.Log(detectedName + " detected!");
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.name == "simpleGrabCupMesh" || other.gameObject.name == "simpleGrabTorchMesh" ||
-            other.transform.root.CompareTag("Mug") || other.transform.root.CompareTag("Flashlight"))
+        string detectedName = GetDetectedItemName(other);
+        if (detectedName != null)
         {
             mugInside = false;
             timerRunning = false;
-            ShowMessage(" removed!\nPlace it back!");
+            ShowMessage(detectedName + " removed!\nPlace it back!");
             Invoke("HideMessage", 2f);
-            Debug.Log("Mug removed!");
+            Debug.Log(detectedName + " removed!");
         }
     }
+
+    // Returns the display name of the detected item, or null if not a valid item
+    string GetDetectedItemName(Collider other)
+    {
+        string objName = other.gameObject.name;
+        string rootTag = other.transform.root.tag;
+
+        if (objName == "simpleGrabCupMesh" || rootTag == "Mug")
+            return "Mug";
+
+        if (objName == "simpleGrabTorchMesh" || rootTag == "Flashlight")
+            return "Flashlight";
+
+        if (objName == "scooter_helmet" || rootTag == "Helmet")
+            return "Safety Helmet";
+
+        // Add more items here following the same pattern:
+        // if (objName == "yourMeshName" || rootTag == "YourTag")
+        //     return "Your Item Display Name";
+
+        return null; // not a recognised item
+    }
+
     void ShowMessage(string text)
     {
         if (messageObject == null)
@@ -67,20 +85,16 @@ public class DetectionZone : MonoBehaviour
             messageObject.transform.position = transform.position + new Vector3(0, 1f, 0);
             messageObject.transform.LookAt(Camera.main.transform);
             messageObject.transform.Rotate(0, 180, 0);
-
             GameObject textObj = new GameObject("Text");
             textObj.transform.SetParent(messageObject.transform, false);
-
             TextMeshPro tmp = textObj.AddComponent<TextMeshPro>();
             tmp.fontSize = 0.5f;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.color = Color.white;
-
             RectTransform rect = textObj.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(2f, 1.5f);
             rect.pivot = new Vector2(0.5f, 0.5f);
         }
-
         TextMeshPro t = messageObject.GetComponentInChildren<TextMeshPro>();
         t.text = text;
     }

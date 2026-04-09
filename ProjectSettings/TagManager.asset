@@ -10,6 +10,7 @@ TagManager:
   - RightController
   - Mug
   - Flashlight
+  - Helmet
   layers:
   - Default
   - TransparentFX
