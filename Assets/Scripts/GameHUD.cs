@@ -54,6 +54,10 @@ public class GameHUD : MonoBehaviour
         foreach (UnityEngine.AI.NavMeshAgent agent in FindObjectsByType<UnityEngine.AI.NavMeshAgent>(FindObjectsSortMode.None))
             agent.isStopped = true;
 
+        // Pause Level1Manager if present (stops tile timers and robot movement)
+        Level1Manager lvl = FindAnyObjectByType<Level1Manager>();
+        if (lvl != null) lvl.SetPaused(true);
+
         if (pauseMenuPanel != null)
             pauseMenuPanel.SetActive(true);
     }
@@ -70,6 +74,10 @@ public class GameHUD : MonoBehaviour
 
         foreach (UnityEngine.AI.NavMeshAgent agent in FindObjectsByType<UnityEngine.AI.NavMeshAgent>(FindObjectsSortMode.None))
             agent.isStopped = false;
+
+        // Resume Level1Manager
+        Level1Manager lvl = FindAnyObjectByType<Level1Manager>();
+        if (lvl != null) lvl.SetPaused(false);
 
         if (pauseMenuPanel != null)
             pauseMenuPanel.SetActive(false);
