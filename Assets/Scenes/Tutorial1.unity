@@ -923,7 +923,15 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
@@ -931,12 +939,32 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1470887710}
     - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1470887708}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: StartTutorial
       objectReference: {fileID: 0}
     - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnStartPressed
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: TutorialManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: TutorialUI, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4242018133905267054, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 4726468041916990280, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
       propertyPath: m_Pivot.x
@@ -1020,10 +1048,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
@@ -1031,12 +1063,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1470887710}
     - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1470887708}
+    - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: StartTutorial
       objectReference: {fileID: 0}
     - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnStartPressed
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: TutorialManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: TutorialUI, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
@@ -1044,6 +1092,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230425884049195225, guid: 731a9bef784f1f84fbb5f774b5e2133f, type: 3}
+      propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents:
@@ -9277,6 +9329,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   groundSnapRayDistance: 10
+  blockingMask:
+    serializedVersion: 2
+    m_Bits: 0
+  playerRadius: 0.3
+  minPlayerHeight: 1.1
+  maxPlayerHeight: 2.2
+  overlapSkin: 0.02
 --- !u!1001 &244361239
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18140,7 +18199,7 @@ MonoBehaviour:
   tileTarget: {fileID: 141163033}
   holeEdge: {fileID: 1179705334}
   holeEdgeDistance: 0.6
-  stoppedDuration: 2
+  stoppedDuration: 0.5
   stoppedVelocityThreshold: 0.05
 --- !u!1001 &1475340187
 PrefabInstance:
