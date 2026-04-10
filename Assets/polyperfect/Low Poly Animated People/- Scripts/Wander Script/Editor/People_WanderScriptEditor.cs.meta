@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 006406555b340124c8edc75e15a2595a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 156748
+  packageName: Low Poly Animated People
+  packageVersion: 3.02
+  assetPath: Assets/polyperfect/Low Poly Animated People/- Scripts/Wander Script/Editor/People_WanderScriptEditor.cs
+  uploadId: 827248
