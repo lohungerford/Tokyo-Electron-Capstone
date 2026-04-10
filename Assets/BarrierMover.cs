@@ -19,17 +19,20 @@ public class BarrierMover : MonoBehaviour
     [SerializeField] private float groundSnapRayDistance = 10f;
 
     private BarrierInteractable held;
+    private Collider heldCollider;
     private float heldYaw;
 
-    void Update()
+    private void Update()
     {
-        // X button
+        // X button: grab nearest, spawn new, or drop current
         if (OVRInput.GetDown(OVRInput.Button.Three))
         {
             if (held == null)
             {
                 if (!TryGrabNearest())
+                {
                     SpawnBarrier();
+                }
             }
             else
             {
@@ -37,14 +40,16 @@ public class BarrierMover : MonoBehaviour
             }
         }
 
-        // Y button rotates
+        // Y button: rotate held barrier by 90 degrees
         if (held != null && OVRInput.GetDown(OVRInput.Button.Four))
         {
             heldYaw += 90f;
         }
 
         if (held != null)
+        {
             Follow();
+        }
     }
 
     private bool TryGrabNearest()
@@ -57,28 +62,33 @@ public class BarrierMover : MonoBehaviour
         );
 
         if (hits.Length == 0)
+        {
             return false;
+        }
 
         Collider best = hits[0];
         float bestDist = Vector3.Distance(followOrigin.position, best.transform.position);
 
         for (int i = 1; i < hits.Length; i++)
         {
-            float d = Vector3.Distance(followOrigin.position, hits[i].transform.position);
-            if (d < bestDist)
+            float dist = Vector3.Distance(followOrigin.position, hits[i].transform.position);
+            if (dist < bestDist)
             {
                 best = hits[i];
-                bestDist = d;
+                bestDist = dist;
             }
         }
 
-        held = best.GetComponentInParent<BarrierInteractable>();
-
-        if (held == null)
+        BarrierInteractable interactable = best.GetComponentInParent<BarrierInteractable>();
+        if (interactable == null)
+        {
             return false;
+        }
 
-        held.rb.isKinematic = true;
+        held = interactable;
         heldYaw = held.transform.eulerAngles.y;
+
+        PrepareHeldBarrier();
 
         return true;
     }
@@ -93,8 +103,41 @@ public class BarrierMover : MonoBehaviour
         GameObject newBarrier = Instantiate(barrierPrefab, spawnPos, spawnRot);
 
         held = newBarrier.GetComponent<BarrierInteractable>();
-        held.rb.isKinematic = true;
-        heldYaw = newBarrier.transform.eulerAngles.y;
+        if (held == null)
+        {
+            Debug.LogError("Spawned barrier is missing BarrierInteractable.");
+            return;
+        }
+
+        heldYaw = held.transform.eulerAngles.y;
+
+        PrepareHeldBarrier();
+    }
+
+    private void PrepareHeldBarrier()
+    {
+        if (held == null)
+        {
+            return;
+        }
+
+        if (held.rb != null)
+        {
+            held.rb.isKinematic = true;
+            held.rb.linearVelocity = Vector3.zero;
+            held.rb.angularVelocity = Vector3.zero;
+        }
+
+        heldCollider = held.GetComponent<Collider>();
+        if (heldCollider == null)
+        {
+            heldCollider = held.GetComponentInChildren<Collider>();
+        }
+
+        if (heldCollider != null)
+        {
+            heldCollider.enabled = false;
+        }
     }
 
     private void Follow()
@@ -108,24 +151,47 @@ public class BarrierMover : MonoBehaviour
 
     private void Drop()
     {
-        Vector3 dropPos = held.transform.position;
+        if (held == null)
+        {
+            return;
+        }
 
+        Vector3 dropPos = held.transform.position;
         Ray ray = new Ray(dropPos + Vector3.up * 2f, Vector3.down);
+
+        float halfHeight = 0.5f;
+        Collider barrierCollider = held.GetComponent<Collider>();
+        if (barrierCollider == null)
+        {
+            barrierCollider = held.GetComponentInChildren<Collider>();
+        }
 
         if (Physics.Raycast(ray, out RaycastHit hit, groundSnapRayDistance, groundMask, QueryTriggerInteraction.Ignore))
         {
-            Collider barrierCollider = held.GetComponent<Collider>();
-            float halfHeight = 0.5f;
-
             if (barrierCollider != null)
+            {
                 halfHeight = barrierCollider.bounds.extents.y;
+            }
 
             dropPos.y = hit.point.y + halfHeight;
         }
 
         held.transform.SetPositionAndRotation(dropPos, Quaternion.Euler(0f, heldYaw, 0f));
-        held.rb.isKinematic = false;
+
+        if (held.rb != null)
+        {
+            // Keep it kinematic so it stays fixed in place
+            held.rb.isKinematic = true;
+            held.rb.linearVelocity = Vector3.zero;
+            held.rb.angularVelocity = Vector3.zero;
+        }
+
+        if (heldCollider != null)
+        {
+            heldCollider.enabled = true;
+        }
 
         held = null;
+        heldCollider = null;
     }
 }
