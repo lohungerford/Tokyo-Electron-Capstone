@@ -18,9 +18,26 @@ public class BarrierMover : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float groundSnapRayDistance = 10f;
 
+    [Header("Player blocking")]
+    [SerializeField] private LayerMask blockingMask;
+    [SerializeField] private float playerRadius = 0.3f;
+    [SerializeField] private float minPlayerHeight = 1.1f;
+    [SerializeField] private float maxPlayerHeight = 2.2f;
+    [SerializeField] private float overlapSkin = 0.02f;
+
     private BarrierInteractable held;
     private Collider heldCollider;
     private float heldYaw;
+    private CharacterController playerBody;
+    private Transform playerHead;
+    private Vector3 lastValidRigPosition;
+
+    private void Start()
+    {
+        playerBody = GetComponent<CharacterController>();
+        playerHead = Camera.main != null ? Camera.main.transform : null;
+        lastValidRigPosition = transform.position;
+    }
 
     private void Update()
     {
@@ -50,6 +67,12 @@ public class BarrierMover : MonoBehaviour
         {
             Follow();
         }
+    }
+
+    private void LateUpdate()
+    {
+        SyncPlayerBody();
+        ResolvePlayerBarrierCollision();
     }
 
     private bool TryGrabNearest()
@@ -128,6 +151,8 @@ public class BarrierMover : MonoBehaviour
             held.rb.angularVelocity = Vector3.zero;
         }
 
+        held.SetHeldState(true);
+
         heldCollider = held.GetComponent<Collider>();
         if (heldCollider == null)
         {
@@ -191,7 +216,86 @@ public class BarrierMover : MonoBehaviour
             heldCollider.enabled = true;
         }
 
+        held.SetHeldState(false);
+
         held = null;
         heldCollider = null;
+    }
+
+    private void SyncPlayerBody()
+    {
+        if (playerBody == null)
+        {
+            return;
+        }
+
+        if (playerHead == null && Camera.main != null)
+        {
+            playerHead = Camera.main.transform;
+        }
+
+        if (playerHead == null)
+        {
+            return;
+        }
+
+        float resolvedMinHeight = minPlayerHeight > 0f ? minPlayerHeight : 1.1f;
+        float resolvedMaxHeight = maxPlayerHeight > resolvedMinHeight ? maxPlayerHeight : 2.2f;
+        float resolvedRadius = playerRadius > 0f ? playerRadius : 0.3f;
+
+        Vector3 localHead = transform.InverseTransformPoint(playerHead.position);
+        float height = Mathf.Clamp(localHead.y, resolvedMinHeight, resolvedMaxHeight);
+        float radius = Mathf.Min(resolvedRadius, height * 0.5f - 0.01f);
+
+        playerBody.height = height;
+        playerBody.radius = radius;
+        playerBody.center = new Vector3(localHead.x, height * 0.5f, localHead.z);
+    }
+
+    private void ResolvePlayerBarrierCollision()
+    {
+        LayerMask resolvedMask = blockingMask.value == 0
+            ? LayerMask.GetMask("Barrier")
+            : blockingMask;
+
+        if (resolvedMask.value == 0 || playerBody == null)
+        {
+            return;
+        }
+
+        if (playerHead == null && Camera.main != null)
+        {
+            playerHead = Camera.main.transform;
+        }
+
+        if (playerHead == null)
+        {
+            return;
+        }
+
+        Vector3 localCenter = playerBody.center;
+        Vector3 worldCenter = transform.TransformPoint(localCenter);
+        float resolvedOverlapSkin = overlapSkin >= 0f ? overlapSkin : 0.02f;
+        float radius = Mathf.Max(0.01f, playerBody.radius - resolvedOverlapSkin);
+        float halfSegment = Mathf.Max(0f, playerBody.height * 0.5f - playerBody.radius);
+        Vector3 top = worldCenter + Vector3.up * halfSegment;
+        Vector3 bottom = worldCenter - Vector3.up * halfSegment;
+
+        Collider[] overlaps = Physics.OverlapCapsule(
+            top,
+            bottom,
+            radius,
+            resolvedMask,
+            QueryTriggerInteraction.Ignore
+        );
+
+        if (overlaps.Length > 0)
+        {
+            transform.position = lastValidRigPosition;
+            SyncPlayerBody();
+            return;
+        }
+
+        lastValidRigPosition = transform.position;
     }
 }
