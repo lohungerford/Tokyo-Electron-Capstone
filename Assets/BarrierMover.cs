@@ -9,6 +9,7 @@ public class BarrierMover : MonoBehaviour
     [Header("Grab settings")]
     [SerializeField] private LayerMask barrierMask;
     [SerializeField] private float grabRange = 2f;
+    [SerializeField] private float grabMaxAngle = 20f;
 
     [Header("Hold settings")]
     [SerializeField] private float holdDistance = 2f;
@@ -41,12 +42,12 @@ public class BarrierMover : MonoBehaviour
 
     private void Update()
     {
-        // X button: grab nearest, spawn new, or drop current
+        // X button: grab targeted barrier, spawn new barrier, or drop current
         if (OVRInput.GetDown(OVRInput.Button.Three))
         {
             if (held == null)
             {
-                if (!TryGrabNearest())
+                if (!TryGrabTargeted())
                 {
                     SpawnBarrier();
                 }
@@ -75,7 +76,29 @@ public class BarrierMover : MonoBehaviour
         ResolvePlayerBarrierCollision();
     }
 
-    private bool TryGrabNearest()
+    private void SpawnBarrier()
+    {
+        Vector3 spawnPos = followOrigin.position + followOrigin.forward * holdDistance;
+        spawnPos.y += holdHeightOffset;
+
+        float snappedYaw = SnapYaw(followOrigin.eulerAngles.y);
+        Quaternion spawnRot = Quaternion.Euler(0f, snappedYaw, 0f);
+
+        GameObject newBarrier = Instantiate(barrierPrefab, spawnPos, spawnRot);
+
+        held = newBarrier.GetComponent<BarrierInteractable>();
+        if (held == null)
+        {
+            Debug.LogError("Spawned barrier is missing BarrierInteractable.");
+            return;
+        }
+
+        heldYaw = snappedYaw;
+
+        PrepareHeldBarrier();
+    }
+
+    private bool TryGrabTargeted()
     {
         Collider[] hits = Physics.OverlapSphere(
             followOrigin.position,
@@ -89,52 +112,52 @@ public class BarrierMover : MonoBehaviour
             return false;
         }
 
-        Collider best = hits[0];
-        float bestDist = Vector3.Distance(followOrigin.position, best.transform.position);
+        float bestScore = float.NegativeInfinity;
+        BarrierInteractable bestInteractable = null;
+        Vector3 origin = followOrigin.position;
+        Vector3 forward = followOrigin.forward.normalized;
 
-        for (int i = 1; i < hits.Length; i++)
+        for (int i = 0; i < hits.Length; i++)
         {
-            float dist = Vector3.Distance(followOrigin.position, hits[i].transform.position);
-            if (dist < bestDist)
+            BarrierInteractable interactable = hits[i].GetComponentInParent<BarrierInteractable>();
+            if (interactable == null)
             {
-                best = hits[i];
-                bestDist = dist;
+                continue;
+            }
+
+            Vector3 targetPos = hits[i].bounds.center;
+            Vector3 toTarget = targetPos - origin;
+            float distance = toTarget.magnitude;
+            if (distance <= Mathf.Epsilon)
+            {
+                continue;
+            }
+
+            Vector3 direction = toTarget / distance;
+            float angle = Vector3.Angle(forward, direction);
+            if (angle > grabMaxAngle)
+            {
+                continue;
+            }
+
+            float alignment = Vector3.Dot(forward, direction);
+            float score = alignment * 100f - distance;
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestInteractable = interactable;
             }
         }
 
-        BarrierInteractable interactable = best.GetComponentInParent<BarrierInteractable>();
-        if (interactable == null)
+        if (bestInteractable == null)
         {
             return false;
         }
 
-        held = interactable;
-        heldYaw = held.transform.eulerAngles.y;
-
+        held = bestInteractable;
+        heldYaw = SnapYaw(held.transform.eulerAngles.y);
         PrepareHeldBarrier();
-
         return true;
-    }
-
-    private void SpawnBarrier()
-    {
-        Vector3 spawnPos = followOrigin.position + followOrigin.forward * holdDistance;
-        spawnPos.y += holdHeightOffset;
-
-        Quaternion spawnRot = Quaternion.Euler(0f, followOrigin.eulerAngles.y, 0f);
-
-        GameObject newBarrier = Instantiate(barrierPrefab, spawnPos, spawnRot);
-
-        held = newBarrier.GetComponent<BarrierInteractable>();
-        if (held == null)
-        {
-            Debug.LogError("Spawned barrier is missing BarrierInteractable.");
-            return;
-        }
-
-        heldYaw = held.transform.eulerAngles.y;
-
-        PrepareHeldBarrier();
     }
 
     private void PrepareHeldBarrier()
@@ -297,5 +320,10 @@ public class BarrierMover : MonoBehaviour
         }
 
         lastValidRigPosition = transform.position;
+    }
+
+    private float SnapYaw(float yaw)
+    {
+        return Mathf.Round(yaw / 90f) * 90f;
     }
 }
