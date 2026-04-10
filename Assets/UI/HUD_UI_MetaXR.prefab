@@ -7642,7 +7642,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     ColorTime: 0.1
   _selectColorState:
-    Color: {r: 1, g: 1, b: 1, a: 0.78431374}
+    Color: {r: 1, g: 1, b: 1, a: 0.9019608}
     ColorCurve:
       serializedVersion: 2
       m_Curve:
@@ -8167,7 +8167,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     ColorTime: 0.1
   _selectColorState:
-    Color: {r: 1, g: 1, b: 1, a: 0.78431374}
+    Color: {r: 1, g: 1, b: 1, a: 0.9019608}
     ColorCurve:
       serializedVersion: 2
       m_Curve:
@@ -10437,7 +10437,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     ColorTime: 0.1
   _selectColorState:
-    Color: {r: 1, g: 1, b: 1, a: 0.78431374}
+    Color: {r: 1, g: 1, b: 1, a: 0.9019608}
     ColorCurve:
       serializedVersion: 2
       m_Curve:
