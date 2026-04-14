@@ -11,6 +11,7 @@ TagManager:
   - Mug
   - Flashlight
   - Helmet
+  - Suit
   layers:
   - Default
   - TransparentFX
