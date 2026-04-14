@@ -54,6 +54,8 @@ public class GameHUD : MonoBehaviour
         foreach (UnityEngine.AI.NavMeshAgent agent in FindObjectsByType<UnityEngine.AI.NavMeshAgent>(FindObjectsSortMode.None))
             agent.isStopped = true;
 
+        SetScenePaused(true);
+
         if (pauseMenuPanel != null)
             pauseMenuPanel.SetActive(true);
     }
@@ -70,6 +72,8 @@ public class GameHUD : MonoBehaviour
 
         foreach (UnityEngine.AI.NavMeshAgent agent in FindObjectsByType<UnityEngine.AI.NavMeshAgent>(FindObjectsSortMode.None))
             agent.isStopped = false;
+
+        SetScenePaused(false);
 
         if (pauseMenuPanel != null)
             pauseMenuPanel.SetActive(false);
@@ -97,5 +101,13 @@ public class GameHUD : MonoBehaviour
         OVRCameraRig rig = FindAnyObjectByType<OVRCameraRig>();
         if (rig == null) return false;
         return t.IsChildOf(rig.transform);
+    }
+
+    private void SetScenePaused(bool paused)
+    {
+        foreach (DisappearMechanic tile in FindObjectsByType<DisappearMechanic>(FindObjectsSortMode.None))
+        {
+            tile.SetPaused(paused);
+        }
     }
 }
