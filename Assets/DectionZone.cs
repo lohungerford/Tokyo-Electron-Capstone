@@ -57,25 +57,23 @@ public class DetectionZone : MonoBehaviour
 
     // Returns the display name of the detected item, or null if not a valid item
     string GetDetectedItemName(Collider other)
-    {
-        string objName = other.gameObject.name;
-        string rootTag = other.transform.root.tag;
-
-        if (objName == "simpleGrabCupMesh" || rootTag == "Mug")
-            return "Mug";
-
-        if (objName == "simpleGrabTorchMesh" || rootTag == "Flashlight")
-            return "Flashlight";
-
-        if (objName == "scooter_helmet" || rootTag == "Helmet")
-            return "Safety Helmet";
-
-        // Add more items here following the same pattern:
-        // if (objName == "yourMeshName" || rootTag == "YourTag")
-        //     return "Your Item Display Name";
-
-        return null; // not a recognised item
-    }
+{
+    string objName = other.gameObject.name;
+    string rootTag = other.transform.root.tag;
+    if (objName == "simpleGrabCupMesh" || rootTag == "Mug")
+        return "Mug";
+    if (objName == "simpleGrabTorchMesh" || rootTag == "Flashlight")
+        return "Flashlight";
+    if (objName == "scooter_helmet" || rootTag == "Helmet")
+        return "Safety Helmet";
+    if (rootTag == "Glasses")
+        return "Safety Glasses";
+    if (rootTag == "Boots")
+        return "Safety Boots";
+    if (rootTag == "Gloves")
+        return "Safety Gloves";
+    return null;
+}
 
     void ShowMessage(string text)
     {

@@ -8,11 +8,13 @@ public class Game1 : MonoBehaviour
 
     private string[] questions = new string[]
     {
-        "SCENARIO 1\n\nThe FAB lights have shut off completely.\nWhich PPE tool do you need?",
-        "SCENARIO 2\n\nYou are entering a zone with\nfalling debris overhead.\nWhat protective gear is required?",
-        "SCENARIO 3\n\nYou are working with exposed\nhigh voltage electrical wiring.\nWhat PPE must you wear?",
-        "SCENARIO 4\n\nA chemical spill has occurred\non the FAB floor.\nWhat protection do you need?",
-        "SCENARIO 5\n\nYou are operating loud machinery\nfor an extended period.\nWhat gear protects you?"
+        "SCENARIO 1\n\nYou’re entering a dark room what should you use?",
+        "SCENARIO 2\n\nYou’re entering a clean room what should you wear to prevent contamination?",
+        "SCENARIO 3\n\nYou’re entering a toxic breathing environment what should you wear to protext yourself?",
+        "SCENARIO 4\n\nYou are entering a zone with\nfalling debris overhead.\nWhat protective gear is required?",
+        "SCENARIO 5\n\nYou are working near moving equipment and particles. What protects your eyes?",
+        "SCENARIO 6\n\nThe clean room floor tiles are open. What protects your feet from contamination?",
+        "SCENARIO 7\n\nYou are handling sensitive wafers. What protects them from oils on your hands? "
     };
 
     public void OnButtonPressed()
