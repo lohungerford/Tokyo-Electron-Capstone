@@ -8,7 +8,7 @@
 <div align="center">
 
 **Platforms:** Virtual Reality (VR)
-**Engine:** Unity **2022.3 LTS**
+**Engine:** Unity **6000.0.61f1**
 **AI/ML:** Unity ML-ToolKit **ML‑Agents** · **Barracuda**
 **Code:** C# (game) 
 </div>
@@ -29,10 +29,10 @@
 
 ## 🧱 Tech Stack
 
-* **Engine:** Unity 2022.3 LTS
+* **Engine:** Unity 6000.0.61f1
 * **AI/ML:** Unity ML‑Agents (training & inference) · Barracuda (inference)
 * **Languages:** C# (gameplay, UI), Python (training pipelines)
-* **Targets:** WebGL, Windows, macOS, iOS, Android
+* **Targets:** Virtual Reality (VR)
 
 ---
 
@@ -53,7 +53,9 @@ Documentation/   # Design docs, guides, SOP mappings
 
 ### Prerequisites
 
-* **Unity 2022.3 LTS** (or newer)
+* **Unity 6000.0.61f1**
 * **Visual Studio** or **JetBrains Rider** (C# support)
 * **Git**
 * **VScode**
+* **Meta Quest Link**
+* **Meta Quest 3S Headset**
