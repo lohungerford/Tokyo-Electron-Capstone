@@ -1,103 +1,118 @@
 using UnityEngine;
 using TMPro;
+
 public class DetectionZone : MonoBehaviour
 {
     private GameObject messageObject;
-    private bool mugInside = false;
-    private float timer = 60f;
+
+    private bool itemInside = false;
+    private float timer = 1000f;
     private bool timerRunning = false;
 
-    void Update()
+    private void Update()
     {
-        if (timerRunning && mugInside)
-        {
-            timer -= Time.deltaTime;
-            timer = Mathf.Max(timer, 0f);
-            if (messageObject != null)
-            {
-                TextMeshPro tmp = messageObject.GetComponentInChildren<TextMeshPro>();
-                int seconds = Mathf.CeilToInt(timer);
-                tmp.text = "CORRECT!\n\ncorrect tool detected in zone\n\nTime remaining: " + seconds + "s";
-            }
-            if (timer <= 0f)
-            {
-                timerRunning = false;
-                ShowMessage("TIME IS UP!\n\nGreat job!");
-            }
-        }
-    }
+        if (!timerRunning || !itemInside) return;
 
-    void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("Something entered zone: " + other.gameObject.name + " tag: " + other.gameObject.tag);
+        timer -= Time.deltaTime;
+        timer = Mathf.Max(timer, 0f);
 
-        string detectedName = GetDetectedItemName(other);
-        if (detectedName != null)
-        {
-            mugInside = true;
-            timerRunning = true;
-            timer = 60f;
-            ShowMessage(detectedName + " detected in zone!\n\nTime remaining: 60s");
-            Debug.Log(detectedName + " detected!");
-        }
-    }
+        UpdateText($"CORRECT!\n\nItem detected\n\nTime remaining: {Mathf.CeilToInt(timer)}s");
 
-    void OnTriggerExit(Collider other)
-    {
-        string detectedName = GetDetectedItemName(other);
-        if (detectedName != null)
+        if (timer <= 0f)
         {
-            mugInside = false;
             timerRunning = false;
-            ShowMessage(detectedName + " removed!\nPlace it back!");
-            Invoke("HideMessage", 2f);
-            Debug.Log(detectedName + " removed!");
+            ShowMessage("TIME IS UP!\n\nGreat job!");
         }
     }
 
-    // Returns the display name of the detected item, or null if not a valid item
-    string GetDetectedItemName(Collider other)
-{
-    string objName = other.gameObject.name;
-    string rootTag = other.transform.root.tag;
-    if (objName == "simpleGrabCupMesh" || rootTag == "Mug")
-        return "Mug";
-    if (objName == "simpleGrabTorchMesh" || rootTag == "Flashlight")
-        return "Flashlight";
-    if (objName == "scooter_helmet" || rootTag == "Helmet")
-        return "Safety Helmet";
-    if (rootTag == "Glasses")
-        return "Safety Glasses";
-    if (rootTag == "Boots")
-        return "Safety Boots";
-    if (rootTag == "Gloves")
-        return "Safety Gloves";
-    return null;
-}
+    private void OnTriggerEnter(Collider other)
+    {
+        string detected = GetDetectedItemName(other);
 
-    void ShowMessage(string text)
+        if (detected == null) return;
+
+        itemInside = true;
+        timerRunning = true;
+        timer = 60f;
+
+        ShowMessage($"{detected} detected in zone!\n\nTime remaining: 1000s");
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        string detected = GetDetectedItemName(other);
+
+        if (detected == null) return;
+
+        itemInside = false;
+        timerRunning = false;
+
+        ShowMessage($"{detected} removed!\nPlace it back!");
+
+        Invoke(nameof(HideMessage), 2f);
+    }
+
+    // ---------------- CLEAN DETECTION LOGIC ----------------
+    private string GetDetectedItemName(Collider other)
+    {
+        GameObject obj = other.attachedRigidbody
+            ? other.attachedRigidbody.gameObject
+            : other.gameObject;
+
+        string name = obj.name;
+        string tag = obj.tag;
+
+        if (tag == "Mug" || name.Contains("Cup"))
+            return "Mug";
+
+        if (tag == "Flashlight" || name.Contains("Torch"))
+            return "Flashlight";
+
+        if (tag == "Helmet")
+            return "Safety Helmet";
+
+        if (tag == "Glasses")
+            return "Safety Glasses";
+
+        if (tag == "Boots")
+            return "Safety Boots";
+
+        if (tag == "Gloves")
+            return "Safety Gloves";
+
+        return null;
+    }
+
+    // ---------------- UI ----------------
+    private void ShowMessage(string text)
     {
         if (messageObject == null)
         {
             messageObject = new GameObject("ZoneMessage");
-            messageObject.transform.position = transform.position + new Vector3(0, 1f, 0);
-            messageObject.transform.LookAt(Camera.main.transform);
-            messageObject.transform.Rotate(0, 180, 0);
+            messageObject.transform.position = transform.position + Vector3.up * 1f;
+
             GameObject textObj = new GameObject("Text");
             textObj.transform.SetParent(messageObject.transform, false);
+
             TextMeshPro tmp = textObj.AddComponent<TextMeshPro>();
             tmp.fontSize = 0.5f;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.color = Color.white;
-            RectTransform rect = textObj.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(2f, 1.5f);
-            rect.pivot = new Vector2(0.5f, 0.5f);
         }
-        TextMeshPro t = messageObject.GetComponentInChildren<TextMeshPro>();
-        t.text = text;
+
+        UpdateText(text);
     }
 
-    void HideMessage()
+    private void UpdateText(string text)
+    {
+        if (messageObject == null) return;
+
+        TextMeshPro tmp = messageObject.GetComponentInChildren<TextMeshPro>();
+        if (tmp != null)
+            tmp.text = text;
+    }
+
+    private void HideMessage()
     {
         if (messageObject != null)
         {
