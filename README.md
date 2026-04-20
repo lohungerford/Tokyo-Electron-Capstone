@@ -7,7 +7,7 @@
 
 <div align="center">
 
-**Platforms:** Web · Windows · macOS · iOS · Android
+**Platforms:** Virtual Reality (VR)
 **Engine:** Unity **2022.3 LTS**
 **AI/ML:** Unity ML-ToolKit **ML‑Agents** · **Barracuda**
 **Code:** C# (game) 
