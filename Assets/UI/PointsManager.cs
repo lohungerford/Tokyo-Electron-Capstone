@@ -31,6 +31,8 @@ using System;
 
 public class PointsManager : MonoBehaviour
 {
+    public const string HighScoreKey = "HighScore";
+
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI pointsLabel;
 
@@ -49,6 +51,7 @@ public class PointsManager : MonoBehaviour
     public void AddPoints(int amount)
     {
         points += amount;
+        SaveHighScoreIfBetter(points);
         UpdateLabel();
         OnPointsDelta?.Invoke(amount);
         OnPointsChanged?.Invoke(points);
@@ -64,7 +67,9 @@ public class PointsManager : MonoBehaviour
         // uncomment below line if want to prevent negative score
         // points = Mathf.Max(0, amount);
         points = amount;
+        SaveHighScoreIfBetter(points);
         UpdateLabel();
+        OnPointsChanged?.Invoke(points);
     }
 
     public void ResetPoints()
@@ -77,6 +82,19 @@ public class PointsManager : MonoBehaviour
     public int GetPoints()
     {
         return points;
+    }
+
+    public static int GetSavedHighScore()
+    {
+        return PlayerPrefs.GetInt(HighScoreKey, 0);
+    }
+
+    public static void SaveHighScoreIfBetter(int score)
+    {
+        if (score <= GetSavedHighScore()) return;
+
+        PlayerPrefs.SetInt(HighScoreKey, score);
+        PlayerPrefs.Save();
     }
 
     // helper functions (can't be called elsewhere)

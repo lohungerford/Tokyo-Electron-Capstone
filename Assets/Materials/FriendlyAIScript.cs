@@ -5,8 +5,8 @@ using UnityEngine.AI;
 /// Friendly robot AI with two movement modes:
 ///   - Patrol mode  (useBounceMovement = false): NavMesh patrol between waypoints. Used in Tutorial 1.
 ///   - Bounce mode  (useBounceMovement = true):  Raycast-based movement. Walks straight, bounces off
-///                                                walls/barriers, falls through open floor tiles.
-///                                                No Rigidbody needed. Used in Level 1+.
+///                                               walls/barriers, falls through open floor tiles.
+///                                               No Rigidbody needed. Used in Level 1+.
 /// Audio/footstep and emotion setup work in both modes.
 /// </summary>
 public class FriendlyAIScript : MonoBehaviour
@@ -27,6 +27,8 @@ public class FriendlyAIScript : MonoBehaviour
     [Header("Bounce Mode (Raycast)")]
     [Tooltip("Enable for level scenes where robots bounce around and can fall through open tiles.")]
     public bool useBounceMovement = false;
+    [Tooltip("If false, the robot stays idle until StartMoving() is called.")]
+    public bool startMovingOnAwake = true;
     public float bounceSpeed = 1.5f;
     public float rotationSpeed = 10f;
     [Tooltip("How far ahead the robot checks for walls")]
@@ -35,6 +37,10 @@ public class FriendlyAIScript : MonoBehaviour
     public float wallDetectRadius = 0.3f;
     [Tooltip("Height above pivot to cast wall detection ray from (must be > wallDetectRadius)")]
     public float wallDetectHeight = 0.6f;
+    [Tooltip("How far to push the robot away from a wall after contact")]
+    public float wallSeparationDistance = 0.25f;
+    [Tooltip("How long to ignore additional wall hits after bouncing away")]
+    public float wallBounceCooldown = 0.15f;
     [Tooltip("How far down to check for floor")]
     public float groundCheckDistance = 1.5f;
     [Tooltip("Small offset above pivot to start ground raycast from")]
@@ -74,20 +80,24 @@ public class FriendlyAIScript : MonoBehaviour
     private Vector3 moveDirection;
     private float fallSpeed;
     private bool isGrounded;
+    private bool isMovementActive = true;
+    private bool isPaused = false;
+    private float wallBounceTimer = 0f;
 
     // =============================================
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        rb    = GetComponent<Rigidbody>();
-        anim  = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
 
-        // Friendly — always happy
+        // Friendly robots are always visually "happy".
         if (emotionChanger != null)
         {
             emotionChanger.SetEmotionEyes(1);
             emotionChanger.SetEmotionMouth(1);
         }
+
         if (robotColorManager != null)
             robotColorManager.ChangeBodyColor(1);
 
@@ -95,11 +105,27 @@ public class FriendlyAIScript : MonoBehaviour
             InitBounceMode();
         else
             InitPatrolMode();
+
+        if (!startMovingOnAwake)
+            PrepareForExternalStart();
     }
 
     // =============================================
     void Update()
     {
+        if (isPaused || !isMovementActive)
+        {
+            if (agent != null && agent.enabled)
+            {
+                agent.isStopped = true;
+                agent.velocity = Vector3.zero;
+            }
+
+            if (anim != null) anim.SetFloat("Speed", 0f);
+            footstepTimer = 0f;
+            return;
+        }
+
         if (!useBounceMovement)
         {
             HandlePatrol();
@@ -127,14 +153,15 @@ public class FriendlyAIScript : MonoBehaviour
     {
         float dt = Time.deltaTime;
 
-        // --- GROUND CHECK ---
-        // Cast a ray downward from slightly above the pivot
+        if (wallBounceTimer > 0f)
+            wallBounceTimer = Mathf.Max(0f, wallBounceTimer - dt);
+
+        // Cast a ray downward from slightly above the pivot.
         Vector3 rayOrigin = transform.position + Vector3.up * groundRayOffset;
         RaycastHit groundHit;
 
         if (Physics.Raycast(rayOrigin, Vector3.down, out groundHit, groundCheckDistance))
         {
-            // Snap to the floor surface
             transform.position = new Vector3(
                 transform.position.x,
                 groundHit.point.y,
@@ -145,12 +172,10 @@ public class FriendlyAIScript : MonoBehaviour
         }
         else
         {
-            // No floor — fall
             isGrounded = false;
             fallSpeed += gravity * dt;
             transform.position += Vector3.down * fallSpeed * dt;
 
-            // Destroy if fallen too far
             if (transform.position.y < destroyBelowY)
             {
                 Destroy(gameObject);
@@ -158,49 +183,38 @@ public class FriendlyAIScript : MonoBehaviour
             }
         }
 
-        // Only move horizontally when grounded
         if (!isGrounded) return;
 
-        // --- WALL CHECK ---
-        // SphereCast forward to detect walls and barriers
+        if (moveDirection == Vector3.zero)
+            SetRandomDirection();
+
         Vector3 wallRayOrigin = transform.position + Vector3.up * wallDetectHeight;
         RaycastHit wallHit;
 
-        if (Physics.SphereCast(wallRayOrigin, wallDetectRadius, moveDirection, out wallHit, wallDetectDistance))
+        if (wallBounceTimer <= 0f &&
+            Physics.SphereCast(wallRayOrigin, wallDetectRadius, moveDirection, out wallHit, wallDetectDistance))
         {
-            // Ignore floor-tagged objects and upward-facing surfaces (tile edges)
             if (!wallHit.collider.CompareTag("Floor") && wallHit.normal.y < 0.3f)
             {
-                // Bounce: pick a random direction AWAY from the wall
-                // Use the wall normal as the base "away" direction, then randomize within a spread
                 Vector3 normal = wallHit.normal;
                 normal.y = 0f;
                 normal.Normalize();
 
                 if (normal != Vector3.zero)
                 {
-                    // Push the robot away from the wall so it can't clip through
-                    transform.position += normal * 0.15f;
-
-                    // Random angle within ±60 degrees of the wall normal
-                    // This always sends the robot away from the wall, never along it
-                    float randomAngle = Random.Range(-60f, 60f);
-                    moveDirection = Quaternion.Euler(0f, randomAngle, 0f) * normal;
-                    moveDirection.y = 0f;
-                    moveDirection.Normalize();
+                    transform.position += normal * wallSeparationDistance;
+                    moveDirection = normal;
+                    wallBounceTimer = wallBounceCooldown;
                 }
             }
         }
 
-        // --- MOVE ---
         transform.position += moveDirection * bounceSpeed * dt;
 
-        // --- ROTATE to face movement direction ---
         if (moveDirection != Vector3.zero)
         {
             Quaternion targetRot = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot,
-                rotationSpeed * dt);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, rotationSpeed * dt);
         }
     }
 
@@ -218,7 +232,6 @@ public class FriendlyAIScript : MonoBehaviour
             agent.updateRotation = true;
         }
 
-        // Keep Rigidbody kinematic so NavMesh drives movement
         if (rb != null) rb.isKinematic = true;
 
         if (patrolPoints != null && patrolPoints.Length > 0)
@@ -227,7 +240,6 @@ public class FriendlyAIScript : MonoBehaviour
 
     private void InitBounceMode()
     {
-        // Disable NavMeshAgent completely
         if (agent != null)
         {
             agent.isStopped = true;
@@ -237,7 +249,6 @@ public class FriendlyAIScript : MonoBehaviour
             agent.enabled = false;
         }
 
-        // Rigidbody not needed — make it kinematic so it doesn't interfere
         if (rb != null) rb.isKinematic = true;
 
         SetRandomDirection();
@@ -288,6 +299,7 @@ public class FriendlyAIScript : MonoBehaviour
         {
             stuckTimer = 0f;
         }
+
         lastPosition = transform.position;
     }
 
@@ -326,9 +338,50 @@ public class FriendlyAIScript : MonoBehaviour
         moveDirection.Normalize();
     }
 
-    /// <summary>Stops the robot — call this when shutting down or game ends.</summary>
+    public void PrepareForExternalStart()
+    {
+        isPaused = false;
+        isMovementActive = false;
+        wallBounceTimer = 0f;
+
+        if (useBounceMovement)
+        {
+            moveDirection = Vector3.zero;
+            fallSpeed = 0f;
+        }
+
+        if (agent != null && agent.enabled)
+        {
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+        }
+
+        if (anim != null) anim.SetFloat("Speed", 0f);
+        footstepTimer = 0f;
+    }
+
+    public void StartMoving()
+    {
+        isPaused = false;
+        isMovementActive = true;
+
+        if (useBounceMovement)
+        {
+            if (moveDirection == Vector3.zero)
+                SetRandomDirection();
+        }
+        else if (agent != null && agent.enabled)
+        {
+            agent.isStopped = false;
+        }
+    }
+
+    /// <summary>Stops the robot - call this when shutting down or game ends.</summary>
     public void Stop()
     {
+        isMovementActive = false;
+        isPaused = false;
+        wallBounceTimer = 0f;
         moveDirection = Vector3.zero;
 
         if (agent != null && agent.enabled)
@@ -339,5 +392,19 @@ public class FriendlyAIScript : MonoBehaviour
 
         if (anim != null) anim.SetFloat("Speed", 0f);
         enabled = false;
+    }
+
+    public void SetPaused(bool paused)
+    {
+        isPaused = paused;
+
+        if (agent != null && agent.enabled)
+        {
+            agent.isStopped = paused || !isMovementActive;
+            if (paused) agent.velocity = Vector3.zero;
+        }
+
+        if (paused && anim != null)
+            anim.SetFloat("Speed", 0f);
     }
 }

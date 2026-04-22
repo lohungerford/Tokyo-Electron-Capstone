@@ -100,3 +100,11 @@ InitTestScene*.unity*
 
 # SyntyStudios assets (third-party)
 Assets/SyntyStudios/
+
+# AI documentation (local-only context for AI coding agents)
+.ai-docs/
+
+# Local agent/editor artifacts
+.claude/
+HANDOFF_CONTEXT.md
+nul
