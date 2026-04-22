@@ -704,15 +704,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2313533588590883761}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ca162ebbbe624541a1a59d547aed141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   timerLabel: {fileID: 4165832974413402127}
   pointsManager: {fileID: 7085426829004961062}
-  startSeconds: 300
-  startOnEnable: 1
+  startSeconds: 90
+  startOnEnable: 0
 --- !u!114 &7085426829004961062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -927,7 +927,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 5:00
+  m_text: 1:30
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}

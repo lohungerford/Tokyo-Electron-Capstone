@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1611704447251090284}
   - component: {fileID: 6048644730096396040}
   - component: {fileID: 4949135786139002324}
+  - component: {fileID: 1174630284157349201}
   m_Layer: 6
   m_Name: Scoreboard_Screen_MetaXR
   m_TagString: Untagged
@@ -131,6 +132,22 @@ MonoBehaviour:
   overlapMask: 0
   overlayType: 2
   _overlayEnabled: 1
+--- !u!114 &1174630284157349201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557708165507551243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8caa4b3f1d4f4ab6cf62f7dd7a7c01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level1ScoreText: {fileID: 2152965421444384984}
+  level2ScoreText: {fileID: 878931425227828462}
+  level3ScoreText: {fileID: 2667237004703525481}
+  finalScoreText: {fileID: 5960804166420137588}
 --- !u!1 &670744777078161138
 GameObject:
   m_ObjectHideFlags: 0
