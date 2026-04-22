@@ -11,27 +11,21 @@ public class KillZone : MonoBehaviour
         //should only respond to the player object
         if (!root.CompareTag("Player")) return;
 
-        // Find the CharacterController anywhere under the player root
-        // (it lives on PlayerController, a child of the Camera Rig)
-        CharacterController cc = root.GetComponentInChildren<CharacterController>();
-        if (cc != null) cc.enabled = false;
-
+        //if the player has a character controller, disable that before moving
+        CharacterController cc = other.GetComponent<CharacterController>();
+        if (cc != null)
+        {
+            cc.enabled = false;
+        }
         if (respawnPoint != null)
         {
-            // Move the CharacterController's GameObject — FirstPersonLocomotor
-            // uses this position to drive the Camera Rig
-            if (cc != null)
-            {
-                cc.transform.position = respawnPoint.position;
-                cc.transform.rotation = respawnPoint.rotation;
-            }
-            else
-            {
-                root.position = respawnPoint.position;
-                root.rotation = respawnPoint.rotation;
-            }
+            other.transform.position = respawnPoint.position;
+            other.transform.rotation = respawnPoint.rotation;
         }
-
-        if (cc != null) cc.enabled = true;
+        
+        if (cc != null)
+        {
+            cc.enabled = true;
+        }
     }
 }

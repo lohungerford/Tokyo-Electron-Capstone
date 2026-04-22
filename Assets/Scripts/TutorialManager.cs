@@ -142,10 +142,8 @@ public class TutorialManager : MonoBehaviour
     private void DetectSuccess()
     {
         if (agent == null || !agent.enabled) return;
+        if (!agent.hasPath) return;
 
-        // Note: we do NOT check agent.hasPath here — when the robot reaches its
-        // destination hasPath becomes false, which would prevent success from triggering.
-        // Instead we rely purely on velocity to detect a stopped robot.
         bool isStopped = agent.velocity.magnitude < stoppedVelocityThreshold;
 
         if (isStopped)

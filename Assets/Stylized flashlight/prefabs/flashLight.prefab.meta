@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 564ee70803d2e594b97da8ae2b1d1aa8
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 236631
+  packageName: Stylized flashlight
+  packageVersion: 1.0
+  assetPath: Assets/Stylized flashlight/prefabs/flashLight.prefab
+  uploadId: 536113
