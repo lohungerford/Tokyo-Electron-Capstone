@@ -25,6 +25,10 @@ public class Level1Manager : MonoBehaviour
     [Tooltip("Drag all friendly robots with FriendlyAIScript here")]
     [SerializeField] private FriendlyAIScript[] robots;
 
+    [Header("Enemy Robots")]
+    [Tooltip("Drag all toxic/enemy robots with RobotAI here — they activate when the game starts")]
+    [SerializeField] private RobotAI[] enemyRobots;
+
     [Header("HUD Text")]
     [Tooltip("The dynamic countdown label on the HUD (e.g. the TMP text that shows 1:30)")]
     [SerializeField] private TextMeshProUGUI timerText;
@@ -41,6 +45,10 @@ public class Level1Manager : MonoBehaviour
     [Tooltip("If the player's Y goes below this, they have fallen")]
     [SerializeField] private float playerFallY = -5f;
     [SerializeField] private Transform playerTransform;
+
+    [Header("Player Health")]
+    [Tooltip("Assign the PlayerHealth component on the Camera Rig. Leave empty for levels without health damage.")]
+    [SerializeField] private PlayerHealth playerHealth;
 
     // State
     private bool gameStarted = false;
@@ -67,6 +75,21 @@ public class Level1Manager : MonoBehaviour
         timer = levelDuration;
         CountAliveRobots();
         UpdateHUD();
+
+        if (playerHealth != null)
+            playerHealth.OnDeath += OnPlayerHealthDepleted;
+    }
+
+    private void OnDestroy()
+    {
+        if (playerHealth != null)
+            playerHealth.OnDeath -= OnPlayerHealthDepleted;
+    }
+
+    private void OnPlayerHealthDepleted()
+    {
+        if (!gameOver)
+            OnLose("Defeated by toxic robots!");
     }
 
     private void Update()
@@ -130,6 +153,12 @@ public class Level1Manager : MonoBehaviour
             if (robot != null) robot.StartMoving();
         }
 
+        // Activate enemy robots — they stay idle until this point
+        foreach (RobotAI enemy in enemyRobots)
+        {
+            if (enemy != null) enemy.Activate();
+        }
+
         // Start tile manager
         if (tileManager != null)
             tileManager.StartTiles();
@@ -182,6 +211,15 @@ public class Level1Manager : MonoBehaviour
         // Stop tile manager
         if (tileManager != null)
             tileManager.StopTiles();
+
+        // Stop enemy robots
+        foreach (RobotAI enemy in enemyRobots)
+        {
+            if (enemy == null || enemy.gameObject == null) continue;
+            enemy.enabled = false;
+            UnityEngine.AI.NavMeshAgent agent = enemy.GetComponent<UnityEngine.AI.NavMeshAgent>();
+            if (agent != null) { agent.isStopped = true; agent.velocity = Vector3.zero; }
+        }
     }
 
     // =============================================
@@ -217,6 +255,15 @@ public class Level1Manager : MonoBehaviour
         {
             if (robot != null && robot.gameObject != null)
                 robot.SetPaused(paused);
+        }
+
+        // Pause/unpause enemy robots
+        foreach (RobotAI enemy in enemyRobots)
+        {
+            if (enemy == null || enemy.gameObject == null) continue;
+            UnityEngine.AI.NavMeshAgent agent = enemy.GetComponent<UnityEngine.AI.NavMeshAgent>();
+            if (agent != null) agent.isStopped = paused;
+            enemy.enabled = !paused;
         }
     }
 

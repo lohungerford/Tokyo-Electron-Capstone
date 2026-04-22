@@ -4,6 +4,8 @@ using UnityEngine.AI;
 
 public class RobotAI : MonoBehaviour
 {
+    private const float DefaultChaseRange = 10f;
+
     public enum State { Patrol, Chase, Attack }
     public State currentState = State.Patrol;
 
@@ -54,27 +56,90 @@ public class RobotAI : MonoBehaviour
     public float attackCooldown = 1.5f;
     private float attackTimer = 0f;
 
+    // ---------------------------------------------
+    // DAMAGE
+    // ---------------------------------------------
+
+    [Tooltip("HP removed from the player on each attack hit.")]
+    public int attackDamage = 2;
+    private PlayerHealth playerHealth;
+
+    // ---------------------------------------------
+    // ACTIVATION GATE
+    // ---------------------------------------------
+
+    [Tooltip("If false, the robot stands idle until Activate() is called (e.g. by Level1Manager on game start).")]
+    public bool startActiveOnAwake = true;
+    private bool isActive = false;
+
     private State previousState;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
-
-        // Use override if provided, otherwise use Camera.main
-        if (playerOverride != null)
-            playerHead = playerOverride;
-        else
-            playerHead = Camera.main.transform;
+        ResolvePlayerTarget();
 
         zombieArmPose = GetComponent<ZombieArmPose>();
         previousState = currentState;
-        OnEnterState(currentState);
         SetEmotion(emotionIndex);
+
+        if (startActiveOnAwake)
+        {
+            Activate();
+        }
+        else
+        {
+            // Stand completely still until Activate() is called.
+            if (agent != null)
+            {
+                agent.isStopped = true;
+                agent.enabled = false;
+            }
+            if (anim != null) anim.SetFloat("Speed", 0f);
+        }
+    }
+
+    /// <summary>
+    /// Called by Level1Manager.StartLevel() to begin AI behaviour.
+    /// Also safe to call directly from other scripts.
+    /// </summary>
+    public void Activate()
+    {
+        isActive = true;
+
+        if (agent != null)
+        {
+            if (!agent.enabled) agent.enabled = true;
+
+            // Snap onto NavMesh if needed (e.g. after the agent was disabled).
+            if (!agent.isOnNavMesh &&
+                NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+                agent.Warp(hit.position);
+
+            agent.isStopped = false;
+        }
+
+        // Cache player health so attacks can deal damage.
+        if (playerHealth == null)
+            playerHealth = FindFirstObjectByType<PlayerHealth>();
+
+        OnEnterState(currentState);
     }
 
     void Update()
     {
+        if (!isActive) return;
+
+        if (playerHead == null)
+            ResolvePlayerTarget();
+
+        if (playerHead == null || agent == null)
+            return;
+
+        if (agent.enabled && !agent.isOnNavMesh && NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+            agent.Warp(hit.position);
+
         // Detect and handle state transitions
         if (currentState != previousState)
         {
@@ -158,7 +223,7 @@ public class RobotAI : MonoBehaviour
         }
 
         // Single patrol point — just stand and watch
-        if (patrolPoints.Length <= 1)
+        if (patrolPoints == null || patrolPoints.Length <= 1)
         {
             agent.isStopped = true;
             return;
@@ -203,6 +268,8 @@ public class RobotAI : MonoBehaviour
 
     void Chase()
     {
+        if (!agent.enabled || !agent.isOnNavMesh) return;
+
         agent.isStopped = false;
 
         agent.SetDestination(playerHead.position);
@@ -213,7 +280,7 @@ public class RobotAI : MonoBehaviour
         if (dist < attackRange)
             currentState = State.Attack;
 
-        if (dist > chaseRange)
+        if (dist > GetEffectiveChaseRange())
             currentState = State.Patrol;
     }
 
@@ -265,6 +332,10 @@ public class RobotAI : MonoBehaviour
 
         if (audioSource != null && attackSound != null)
             audioSource.PlayOneShot(attackSound);
+
+        // Deal damage to the player.
+        if (playerHealth != null)
+            playerHealth.TakeDamage(attackDamage);
     }
 
     public string[] attackBools = { "Thumb", "Cry", "Win", "Angry" };
@@ -298,6 +369,9 @@ public class RobotAI : MonoBehaviour
 
     float HorizontalDistanceToPlayer()
     {
+        if (playerHead == null)
+            return float.MaxValue;
+
         Vector3 flatRobot = new Vector3(transform.position.x, 0, transform.position.z);
         Vector3 flatPlayer = new Vector3(playerHead.position.x, 0, playerHead.position.z);
 
@@ -306,11 +380,13 @@ public class RobotAI : MonoBehaviour
 
     bool PlayerInChaseRange()
     {
-        return HorizontalDistanceToPlayer() < chaseRange;
+        return HorizontalDistanceToPlayer() < GetEffectiveChaseRange();
     }
 
     void RotateTowardPlayer()
     {
+        if (playerHead == null) return;
+
         Vector3 direction = (playerHead.position - transform.position);
         direction.y = 0;
 
@@ -319,5 +395,35 @@ public class RobotAI : MonoBehaviour
             Quaternion targetRot = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, Time.deltaTime * rotationSpeed);
         }
+    }
+
+    private float GetEffectiveChaseRange()
+    {
+        return chaseRange > 0f ? chaseRange : DefaultChaseRange;
+    }
+
+    private void ResolvePlayerTarget()
+    {
+        if (playerOverride != null)
+        {
+            playerHead = playerOverride;
+            return;
+        }
+
+        GameObject taggedPlayer = GameObject.FindGameObjectWithTag("Player");
+        if (taggedPlayer != null)
+        {
+            playerHead = taggedPlayer.transform;
+            return;
+        }
+
+        if (Camera.main != null)
+        {
+            playerHead = Camera.main.transform;
+            return;
+        }
+
+        Camera anyCamera = FindFirstObjectByType<Camera>();
+        playerHead = anyCamera != null ? anyCamera.transform : null;
     }
 }
