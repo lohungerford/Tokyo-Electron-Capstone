@@ -17,11 +17,14 @@ public class HighScoreDisplay : MonoBehaviour
     [ContextMenu("Refresh High Score")]
     public void Refresh()
     {
+        int levelOneScore = PointsManager.GetSavedLevelScore("LevelOne");
+        int levelTwoScore = PointsManager.GetSavedLevelScore("LevelTwo");
+        int levelThreeScore = PointsManager.GetSavedLevelScore("LevelThree");
         int highScore = PointsManager.GetSavedHighScore();
 
-        SetLabel(level1ScoreText, highScore);
-        SetLabel(level2ScoreText, 0);
-        SetLabel(level3ScoreText, 0);
+        SetLabel(level1ScoreText, levelOneScore);
+        SetLabel(level2ScoreText, levelTwoScore);
+        SetLabel(level3ScoreText, levelThreeScore);
         SetLabel(finalScoreText, highScore);
     }
 

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 using System;
+using UnityEngine.SceneManagement;
 
 /* ACTION POINT COSTS:  (may need to be adjusted after gameplay testing)
     AI Friendly Robots:
@@ -32,6 +33,9 @@ using System;
 public class PointsManager : MonoBehaviour
 {
     public const string HighScoreKey = "HighScore";
+    public const string LevelOneScoreKey = "HighScore_LevelOne";
+    public const string LevelTwoScoreKey = "HighScore_LevelTwo";
+    public const string LevelThreeScoreKey = "HighScore_LevelThree";
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI pointsLabel;
@@ -51,7 +55,7 @@ public class PointsManager : MonoBehaviour
     public void AddPoints(int amount)
     {
         points += amount;
-        SaveHighScoreIfBetter(points);
+        SaveScoresIfBetter(points);
         UpdateLabel();
         OnPointsDelta?.Invoke(amount);
         OnPointsChanged?.Invoke(points);
@@ -67,7 +71,7 @@ public class PointsManager : MonoBehaviour
         // uncomment below line if want to prevent negative score
         // points = Mathf.Max(0, amount);
         points = amount;
-        SaveHighScoreIfBetter(points);
+        SaveScoresIfBetter(points);
         UpdateLabel();
         OnPointsChanged?.Invoke(points);
     }
@@ -89,6 +93,12 @@ public class PointsManager : MonoBehaviour
         return PlayerPrefs.GetInt(HighScoreKey, 0);
     }
 
+    public static int GetSavedLevelScore(string sceneName)
+    {
+        string key = GetSceneScoreKey(sceneName);
+        return string.IsNullOrEmpty(key) ? 0 : PlayerPrefs.GetInt(key, 0);
+    }
+
     public static void SaveHighScoreIfBetter(int score)
     {
         if (score <= GetSavedHighScore()) return;
@@ -97,10 +107,38 @@ public class PointsManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    public static void SaveLevelScoreIfBetter(string sceneName, int score)
+    {
+        string key = GetSceneScoreKey(sceneName);
+        if (string.IsNullOrEmpty(key)) return;
+        if (score <= PlayerPrefs.GetInt(key, 0)) return;
+
+        PlayerPrefs.SetInt(key, score);
+        PlayerPrefs.Save();
+    }
+
+    private static void SaveScoresIfBetter(int score)
+    {
+        SaveHighScoreIfBetter(score);
+        SaveLevelScoreIfBetter(SceneManager.GetActiveScene().name, score);
+    }
+
+    private static string GetSceneScoreKey(string sceneName)
+    {
+        return sceneName switch
+        {
+            "LevelOne" => LevelOneScoreKey,
+            "LevelTwo" => LevelTwoScoreKey,
+            "LevelThree" => LevelThreeScoreKey,
+            _ => null
+        };
+    }
+
     // helper functions (can't be called elsewhere)
     private void UpdateLabel()
     {
-        pointsLabel.text = $"{points}";
+        if (pointsLabel != null)
+            pointsLabel.text = $"{points}";
     }
 
     [ContextMenu("DEBUG/Add +10 Points")]

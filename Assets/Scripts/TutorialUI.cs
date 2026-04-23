@@ -35,7 +35,12 @@ public class TutorialUI : MonoBehaviour
     public void OnStartPressed()
     {
         HidePanel(instructionPanel);
-        // TutorialManager will listen for this and start the robot
+        // Level scenes copied from tutorial prefabs may not always keep a direct
+        // button event wired to their manager. Fall back to any active Level1Manager.
+        foreach (Level1Manager manager in FindObjectsByType<Level1Manager>(FindObjectsSortMode.None))
+        {
+            manager.StartLevel();
+        }
     }
 
     // -----------------------------------------------

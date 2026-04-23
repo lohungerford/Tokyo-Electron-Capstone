@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// Handles a single floor tile that can warn, break (disappear), and repair (reappear).
@@ -12,7 +13,8 @@ public class DisappearMechanic : MonoBehaviour
     public float flashSpeed = 4f; // flashes per second
 
     private MeshRenderer meshRenderer;
-    private Collider tileCollider;
+    private Collider[] tileColliders;
+    private NavMeshObstacle navMeshObstacle;
     private Color originalColor;
     private Material tileMaterial;
 
@@ -24,7 +26,24 @@ public class DisappearMechanic : MonoBehaviour
     void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
-        tileCollider = GetComponent<Collider>();
+        tileColliders = GetComponents<Collider>();
+        navMeshObstacle = GetComponent<NavMeshObstacle>();
+
+        if (navMeshObstacle != null)
+        {
+            navMeshObstacle.carving = true;
+            navMeshObstacle.carveOnlyStationary = false;
+
+            BoxCollider boxCollider = GetComponent<BoxCollider>();
+            if (boxCollider != null)
+            {
+                navMeshObstacle.shape = NavMeshObstacleShape.Box;
+                navMeshObstacle.center = boxCollider.center;
+                navMeshObstacle.size = boxCollider.size;
+            }
+
+            navMeshObstacle.enabled = false;
+        }
 
         if (meshRenderer != null)
         {
@@ -73,8 +92,17 @@ public class DisappearMechanic : MonoBehaviour
         if (meshRenderer != null)
             meshRenderer.enabled = false;
 
-        if (tileCollider != null)
-            tileCollider.enabled = false;
+        if (tileColliders != null)
+        {
+            foreach (Collider tileCollider in tileColliders)
+            {
+                if (tileCollider != null)
+                    tileCollider.enabled = false;
+            }
+        }
+
+        if (navMeshObstacle != null)
+            navMeshObstacle.enabled = true;
     }
 
     /// <summary>Repair the tile — reappears visually and physically.</summary>
@@ -85,11 +113,20 @@ public class DisappearMechanic : MonoBehaviour
         if (meshRenderer != null)
             meshRenderer.enabled = true;
 
-        if (tileCollider != null)
-            tileCollider.enabled = true;
+        if (tileColliders != null)
+        {
+            foreach (Collider tileCollider in tileColliders)
+            {
+                if (tileCollider != null)
+                    tileCollider.enabled = true;
+            }
+        }
 
         if (tileMaterial != null)
             tileMaterial.color = originalColor;
+
+        if (navMeshObstacle != null)
+            navMeshObstacle.enabled = false;
     }
 
     public bool IsBroken() => isBroken;
