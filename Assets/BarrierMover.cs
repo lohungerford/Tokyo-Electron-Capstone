@@ -9,6 +9,7 @@ public class BarrierMover : MonoBehaviour
     [Header("Grab settings")]
     [SerializeField] private LayerMask barrierMask;
     [SerializeField] private float grabRange = 2f;
+    [SerializeField] private float grabMaxAngle = 20f;
 
     [Header("Hold settings")]
     [SerializeField] private float holdDistance = 2f;
@@ -18,18 +19,38 @@ public class BarrierMover : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float groundSnapRayDistance = 10f;
 
-    private BarrierInteractable held;
-    private float heldYaw;
+    [Header("Player blocking")]
+    [SerializeField] private LayerMask blockingMask;
+    [SerializeField] private float playerRadius = 0.3f;
+    [SerializeField] private float minPlayerHeight = 1.1f;
+    [SerializeField] private float maxPlayerHeight = 2.2f;
+    [SerializeField] private float overlapSkin = 0.02f;
 
-    void Update()
+    private BarrierInteractable held;
+    private Collider heldCollider;
+    private float heldYaw;
+    private CharacterController playerBody;
+    private Transform playerHead;
+    private Vector3 lastValidRigPosition;
+
+    private void Start()
     {
-        // X button
+        playerBody = GetComponent<CharacterController>();
+        playerHead = Camera.main != null ? Camera.main.transform : null;
+        lastValidRigPosition = transform.position;
+    }
+
+    private void Update()
+    {
+        // X button: grab targeted barrier, spawn new barrier, or drop current
         if (OVRInput.GetDown(OVRInput.Button.Three))
         {
             if (held == null)
             {
-                if (!TryGrabNearest())
+                if (!TryGrabTargeted())
+                {
                     SpawnBarrier();
+                }
             }
             else
             {
@@ -37,17 +58,47 @@ public class BarrierMover : MonoBehaviour
             }
         }
 
-        // Y button rotates
+        // Y button: rotate held barrier by 90 degrees
         if (held != null && OVRInput.GetDown(OVRInput.Button.Four))
         {
             heldYaw += 90f;
         }
 
         if (held != null)
+        {
             Follow();
+        }
     }
 
-    private bool TryGrabNearest()
+    private void LateUpdate()
+    {
+        SyncPlayerBody();
+        ResolvePlayerBarrierCollision();
+    }
+
+    private void SpawnBarrier()
+    {
+        Vector3 spawnPos = followOrigin.position + followOrigin.forward * holdDistance;
+        spawnPos.y += holdHeightOffset;
+
+        float snappedYaw = SnapYaw(followOrigin.eulerAngles.y);
+        Quaternion spawnRot = Quaternion.Euler(0f, snappedYaw, 0f);
+
+        GameObject newBarrier = Instantiate(barrierPrefab, spawnPos, spawnRot);
+
+        held = newBarrier.GetComponent<BarrierInteractable>();
+        if (held == null)
+        {
+            Debug.LogError("Spawned barrier is missing BarrierInteractable.");
+            return;
+        }
+
+        heldYaw = snappedYaw;
+
+        PrepareHeldBarrier();
+    }
+
+    private bool TryGrabTargeted()
     {
         Collider[] hits = Physics.OverlapSphere(
             followOrigin.position,
@@ -57,44 +108,84 @@ public class BarrierMover : MonoBehaviour
         );
 
         if (hits.Length == 0)
-            return false;
-
-        Collider best = hits[0];
-        float bestDist = Vector3.Distance(followOrigin.position, best.transform.position);
-
-        for (int i = 1; i < hits.Length; i++)
         {
-            float d = Vector3.Distance(followOrigin.position, hits[i].transform.position);
-            if (d < bestDist)
+            return false;
+        }
+
+        float bestScore = float.NegativeInfinity;
+        BarrierInteractable bestInteractable = null;
+        Vector3 origin = followOrigin.position;
+        Vector3 forward = followOrigin.forward.normalized;
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            BarrierInteractable interactable = hits[i].GetComponentInParent<BarrierInteractable>();
+            if (interactable == null)
             {
-                best = hits[i];
-                bestDist = d;
+                continue;
+            }
+
+            Vector3 targetPos = hits[i].bounds.center;
+            Vector3 toTarget = targetPos - origin;
+            float distance = toTarget.magnitude;
+            if (distance <= Mathf.Epsilon)
+            {
+                continue;
+            }
+
+            Vector3 direction = toTarget / distance;
+            float angle = Vector3.Angle(forward, direction);
+            if (angle > grabMaxAngle)
+            {
+                continue;
+            }
+
+            float alignment = Vector3.Dot(forward, direction);
+            float score = alignment * 100f - distance;
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestInteractable = interactable;
             }
         }
 
-        held = best.GetComponentInParent<BarrierInteractable>();
-
-        if (held == null)
+        if (bestInteractable == null)
+        {
             return false;
+        }
 
-        held.rb.isKinematic = true;
-        heldYaw = held.transform.eulerAngles.y;
-
+        held = bestInteractable;
+        heldYaw = SnapYaw(held.transform.eulerAngles.y);
+        PrepareHeldBarrier();
         return true;
     }
 
-    private void SpawnBarrier()
+    private void PrepareHeldBarrier()
     {
-        Vector3 spawnPos = followOrigin.position + followOrigin.forward * holdDistance;
-        spawnPos.y += holdHeightOffset;
+        if (held == null)
+        {
+            return;
+        }
 
-        Quaternion spawnRot = Quaternion.Euler(0f, followOrigin.eulerAngles.y, 0f);
+        if (held.rb != null)
+        {
+            held.rb.isKinematic = true;
+            held.rb.linearVelocity = Vector3.zero;
+            held.rb.angularVelocity = Vector3.zero;
+        }
 
-        GameObject newBarrier = Instantiate(barrierPrefab, spawnPos, spawnRot);
+        held.SetHeldState(true);
 
-        held = newBarrier.GetComponent<BarrierInteractable>();
-        held.rb.isKinematic = true;
-        heldYaw = newBarrier.transform.eulerAngles.y;
+        heldCollider = held.GetComponent<Collider>();
+        if (heldCollider == null)
+        {
+            heldCollider = held.GetComponentInChildren<Collider>();
+        }
+
+        if (heldCollider != null)
+        {
+            heldCollider.enabled = false;
+        }
     }
 
     private void Follow()
@@ -108,24 +199,131 @@ public class BarrierMover : MonoBehaviour
 
     private void Drop()
     {
-        Vector3 dropPos = held.transform.position;
+        if (held == null)
+        {
+            return;
+        }
 
+        Vector3 dropPos = held.transform.position;
         Ray ray = new Ray(dropPos + Vector3.up * 2f, Vector3.down);
+
+        float halfHeight = 0.5f;
+        Collider barrierCollider = held.GetComponent<Collider>();
+        if (barrierCollider == null)
+        {
+            barrierCollider = held.GetComponentInChildren<Collider>();
+        }
 
         if (Physics.Raycast(ray, out RaycastHit hit, groundSnapRayDistance, groundMask, QueryTriggerInteraction.Ignore))
         {
-            Collider barrierCollider = held.GetComponent<Collider>();
-            float halfHeight = 0.5f;
-
             if (barrierCollider != null)
+            {
                 halfHeight = barrierCollider.bounds.extents.y;
+            }
 
             dropPos.y = hit.point.y + halfHeight;
         }
 
         held.transform.SetPositionAndRotation(dropPos, Quaternion.Euler(0f, heldYaw, 0f));
-        held.rb.isKinematic = false;
+
+        if (held.rb != null)
+        {
+            // Keep it kinematic so it stays fixed in place
+            held.rb.isKinematic = true;
+            held.rb.linearVelocity = Vector3.zero;
+            held.rb.angularVelocity = Vector3.zero;
+        }
+
+        if (heldCollider != null)
+        {
+            heldCollider.enabled = true;
+        }
+
+        held.SetHeldState(false);
 
         held = null;
+        heldCollider = null;
+    }
+
+    private void SyncPlayerBody()
+    {
+        if (playerBody == null)
+        {
+            return;
+        }
+
+        if (playerHead == null && Camera.main != null)
+        {
+            playerHead = Camera.main.transform;
+        }
+
+        if (playerHead == null)
+        {
+            return;
+        }
+
+        float resolvedMinHeight = minPlayerHeight > 0f ? minPlayerHeight : 1.1f;
+        float resolvedMaxHeight = maxPlayerHeight > resolvedMinHeight ? maxPlayerHeight : 2.2f;
+        float resolvedRadius = playerRadius > 0f ? playerRadius : 0.3f;
+
+        Vector3 localHead = transform.InverseTransformPoint(playerHead.position);
+        float height = Mathf.Clamp(localHead.y, resolvedMinHeight, resolvedMaxHeight);
+        float radius = Mathf.Min(resolvedRadius, height * 0.5f - 0.01f);
+
+        playerBody.height = height;
+        playerBody.radius = radius;
+        playerBody.center = new Vector3(localHead.x, height * 0.5f, localHead.z);
+    }
+
+    private void ResolvePlayerBarrierCollision()
+    {
+        LayerMask resolvedMask = blockingMask.value == 0
+            ? LayerMask.GetMask("Barrier")
+            : blockingMask;
+
+        if (resolvedMask.value == 0 || playerBody == null)
+        {
+            return;
+        }
+
+        if (playerHead == null && Camera.main != null)
+        {
+            playerHead = Camera.main.transform;
+        }
+
+        if (playerHead == null)
+        {
+            return;
+        }
+
+        Vector3 localCenter = playerBody.center;
+        Vector3 worldCenter = transform.TransformPoint(localCenter);
+        float resolvedOverlapSkin = overlapSkin >= 0f ? overlapSkin : 0.02f;
+        float radius = Mathf.Max(0.01f, playerBody.radius - resolvedOverlapSkin);
+        float halfSegment = Mathf.Max(0f, playerBody.height * 0.5f - playerBody.radius);
+        Vector3 top = worldCenter + Vector3.up * halfSegment;
+        Vector3 bottom = worldCenter - Vector3.up * halfSegment;
+
+        Collider[] overlaps = Physics.OverlapCapsule(
+            top,
+            bottom,
+            radius,
+            resolvedMask,
+            QueryTriggerInteraction.Ignore
+        );
+
+        if (overlaps.Length > 0)
+        {
+            transform.position = lastValidRigPosition;
+            SyncPlayerBody();
+            return;
+        }
+
+        lastValidRigPosition = transform.position;
+    }
+
+    private float SnapYaw(float yaw)
+    {
+        return Mathf.Round(yaw / 90f) * 90f;
     }
 }

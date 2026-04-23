@@ -9722,14 +9722,22 @@ MonoBehaviour:
   barrierPrefab: {fileID: 7146527700766600782, guid: 94294de138d36db42905135dbd459a52, type: 3}
   barrierMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   grabRange: 2
+  grabMaxAngle: 20
   holdDistance: 2
   holdHeightOffset: -0.3
   groundMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   groundSnapRayDistance: 10
+  blockingMask:
+    serializedVersion: 2
+    m_Bits: 0
+  playerRadius: 0.3
+  minPlayerHeight: 1.1
+  maxPlayerHeight: 2.2
+  overlapSkin: 0.02
 --- !u!1001 &244361239
 PrefabInstance:
   m_ObjectHideFlags: 0

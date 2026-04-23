@@ -2746,10 +2746,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2593807021158988700}
+  - component: {fileID: 6304209776434628141}
   - component: {fileID: 2736315201455436011}
   - component: {fileID: 4866645861004643286}
   - component: {fileID: 3429926328277901602}
   - component: {fileID: 4585393491546618639}
+  - component: {fileID: 3379098820759290732}
   m_Layer: 0
   m_Name: '[BuildingBlock] Camera Rig'
   m_TagString: Untagged
@@ -2774,6 +2776,31 @@ Transform:
   - {fileID: 1477396393708510090}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!143 &6304209776434628141
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2537997867650674689}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1.7
+  m_Radius: 0.3
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.85, z: 0}
 --- !u!114 &2736315201455436011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2913,6 +2940,38 @@ MonoBehaviour:
   - <Keyboard>/leftAlt
   - <Keyboard>/rightAlt
   - <Keyboard>/f2
+--- !u!114 &3379098820759290732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2537997867650674689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7527cbfd26b51468a0d8a4018fb0b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followOrigin: {fileID: 5910882942078566332}
+  barrierPrefab: {fileID: 7146527700766600782, guid: 94294de138d36db42905135dbd459a52, type: 3}
+  barrierMask:
+    serializedVersion: 2
+    m_Bits: 256
+  grabRange: 2
+  grabMaxAngle: 20
+  holdDistance: 2
+  holdHeightOffset: -0.3
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 128
+  groundSnapRayDistance: 10
+  blockingMask:
+    serializedVersion: 2
+    m_Bits: 0
+  playerRadius: 0.3
+  minPlayerHeight: 1.1
+  maxPlayerHeight: 2.2
+  overlapSkin: 0.02
 --- !u!1 &2539702952305706950
 GameObject:
   m_ObjectHideFlags: 0
